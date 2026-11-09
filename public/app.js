@@ -199,17 +199,29 @@ async function loadAdminSupplyRequests(){
 async function renderOperations(admin=false){
  const host=$('#vina-operations');if(!host)return;
  try{
-  const data=await api('operations');
+  const [data,report]=await Promise.all([api('operations'),admin?api('operations/summary'):Promise.resolve(null)]);
   const items=data.items||[];
+  const counts=new Map((report?.items||[]).map(row=>[row.id,row]));
   const now=Date.now();
   host.innerHTML=(admin?'<form id="vina-operation-form" class="vina-inventory-form"><label>Формат<select name="kind"><option value="event">Обов’язковий захід</option><option value="announcement">Оголошення 📣</option></select></label><label>Назва<input name="title" required minlength="3" maxlength="120"></label><label>Опис<textarea name="details" maxlength="2000"></textarea></label><label>Опублікувати (час Києва)<input type="datetime-local" name="publishAt" required></label><label>Дата заходу (за потреби)<input type="datetime-local" name="eventAt"></label><button class="button" type="submit">Запланувати</button></form>':'')+
-  '<div class="vina-task-list">'+items.map(x=>'<div class="vina-task-row"><div><strong>'+(x.kind==='event'?'🧹 ':'📣 ')+esc(x.title)+'</strong><small>'+esc(x.details||'')+'</small><small>Публікація: '+esc(dateTime(x.publish_at))+(x.event_at?' · Захід: '+esc(dateTime(x.event_at)):'')+(admin?(x.active?' · Активне':' · Вимкнено'):'')+'</small></div><div class="vina-task-admin-actions">'+(admin?'<button type="button" class="ghost" data-operation-edit="'+esc(x.id)+'">Редагувати</button>':(x.acknowledged_at?'<span class="vina-task-done">✓ Ознайомився</span>':'<button type="button" class="ghost" data-operation-ack="'+esc(x.id)+'">Ознайомився</button>'))+'</div></div>').join('')+'</div>';
+  '<div class="vina-task-list">'+items.map(x=>'<div class="vina-task-row"><div><strong>'+(x.kind==='event'?'🧹 ':'📣 ')+esc(x.title)+'</strong><small>'+esc(x.details||'')+'</small><small>Публікація: '+esc(dateTime(x.publish_at))+(x.event_at?' · Захід: '+esc(dateTime(x.event_at)):'')+(admin?(x.active?' · Активне':' · Вимкнено'):'')+'</small></div><div class="vina-task-admin-actions">'+(admin?'<span class="vina-operation-count">'+(counts.get(x.id)?.acknowledged_total||0)+' / '+(counts.get(x.id)?.staff_total||0)+' ознайомились</span><button type="button" class="ghost" data-operation-report="'+esc(x.id)+'">Хто прочитав</button><button type="button" class="ghost" data-operation-edit="'+esc(x.id)+'">Редагувати</button>':(x.acknowledged_at?'<span class="vina-task-done">✓ Ознайомився</span>':'<button type="button" class="ghost" data-operation-ack="'+esc(x.id)+'">Ознайомився</button>'))+'</div></div>').join('')+'</div>';
   if(!items.length)host.insertAdjacentHTML('beforeend','<p class="muted">Поки немає '+(admin?'запланованих подій.':'нових оголошень.')+'</p>');
   const form=$('#vina-operation-form');
   if(form){
    const toLocal=date=>{const d=new Date(date);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)};
    form.elements.publishAt.value=toLocal(new Date());
    form.onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(form));const b=form.querySelector('[type=submit]');pending(b,true,'Зберігаємо…');try{const payload={kind:v.kind,title:v.title,details:v.details||'',publishAt:new Date(v.publishAt).toISOString(),eventAt:v.eventAt?new Date(v.eventAt).toISOString():null,active:true};const id=form.dataset.editId;await api(id?'operations/'+id:'operations',{method:id?'PATCH':'POST',body:JSON.stringify(payload)});toast('Збережено');await renderOperations(true)}catch(err){msg(err.message);pending(b,false)}};
+   host.querySelectorAll('[data-operation-report]').forEach(button=>button.onclick=async()=>{
+    const old=button.textContent;button.disabled=true;button.textContent='Завантаження…';
+    try{
+     const report=await api('operations/'+button.dataset.operationReport+'/acknowledgments');
+     let panel=host.querySelector('#vina-operation-report');if(panel)panel.remove();
+     panel=document.createElement('section');panel.id='vina-operation-report';panel.className='vina-operation-report';
+     const entry=items.find(x=>x.id===button.dataset.operationReport);
+     panel.innerHTML='<div class="row"><h3>Ознайомлення · '+esc(entry?.title||'')+'</h3><button type="button" class="ghost" id="vina-report-close">Закрити</button></div>'+(report.staff.length?report.staff.map(p=>'<div class="vina-operation-person"><strong>'+esc(p.display_name)+'</strong><span>'+(p.acknowledged_at?'✓ '+esc(dateTime(p.acknowledged_at)):'Ще не ознайомився')+'</span></div>').join(''):'<p class="muted">Активних бариста немає.</p>');
+     host.append(panel);panel.querySelector('#vina-report-close').onclick=()=>panel.remove();panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }catch(err){msg(err.message)}finally{if(button.isConnected){button.disabled=false;button.textContent=old}}
+   });
    host.querySelectorAll('[data-operation-edit]').forEach(button=>button.onclick=()=>{const x=items.find(i=>i.id===button.dataset.operationEdit);if(!x)return;form.dataset.editId=x.id;form.elements.kind.value=x.kind;form.elements.title.value=x.title;form.elements.details.value=x.details;form.elements.publishAt.value=toLocal(x.publish_at);form.elements.eventAt.value=x.event_at?toLocal(x.event_at):'';form.querySelector('[type=submit]').textContent='Зберегти зміни';form.scrollIntoView({behavior:'smooth',block:'start'})});
   }
   host.querySelectorAll('[data-operation-ack]').forEach(button=>button.onclick=async()=>{pending(button,true,'Зберігаємо…');try{await post('operations/'+button.dataset.operationAck+'/ack',{});await renderOperations(false)}catch(err){msg(err.message);pending(button,false)}});
