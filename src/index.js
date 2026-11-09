@@ -10,7 +10,7 @@ async function session(request,env){const token=cookie(request);if(!token)return
 function sameOrigin(request){const origin=request.headers.get('origin');return origin===new URL(request.url).origin}
 async function body(request){if(!request.headers.get('content-type')?.startsWith('application/json'))throw Error('json');if(Number(request.headers.get('content-length')||0)>4096)throw Error('size');const data=await request.json();if(!data||typeof data!=='object'||Array.isArray(data))throw Error('body');return data}
 const sessionCookie=(token,age)=>'vina_session='+token+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+age;
-async function audit(env,actor,action,entity,id){await env.DB.prepare('INSERT INTO audit_events(id,actor_id,action,entity_type,entity_id) VALUES(?,?,?,?,?)').bind(crypto.randomUUID(),actor,action,entity,id).run()}
+async function audit(env,actor,action,entity,id){await env.DB.prepare('CREATE TABLE IF NOT EXISTS audit_events (id TEXT PRIMARY KEY, actor_id TEXT, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT, details_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)').run();await env.DB.prepare('INSERT INTO audit_events(id,actor_id,action,entity_type,entity_id) VALUES(?,?,?,?,?)').bind(crypto.randomUUID(),actor,action,entity,id).run()}
 export default {async fetch(request,env){
 const path=new URL(request.url).pathname;
 if(path==='/api/health'){if(request.method!=='GET')return reply({error:'Метод не підтримується'},405);try{await env.DB.prepare('SELECT 1').first();return reply({status:'ok',database:'ready'})}catch{return reply({status:'degraded',database:'unavailable'},503)}}
@@ -43,6 +43,30 @@ if(path==='/api/auth/me'&&request.method==='GET')return reply({user:{name:user.d
 if(path==='/api/auth/logout'&&request.method==='POST'){await env.DB.prepare("UPDATE sessions SET revoked_at=? WHERE id_hash=?").bind(new Date().toISOString(),await sha(cookie(request))).run();return reply({ok:true},200,{'set-cookie':sessionCookie('',0)})}
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 if(path==='/api/staff'&&request.method==='GET'){const result=await env.DB.prepare('SELECT id,display_name,role,rank,active,created_at FROM employees ORDER BY created_at DESC LIMIT 100').all();return reply({staff:result.results})}
+if(path==='/api/audit'&&request.method==='GET'){await env.DB.prepare('CREATE TABLE IF NOT EXISTS audit_events (id TEXT PRIMARY KEY, actor_id TEXT, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT, details_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)').run();const result=await env.DB.prepare('SELECT action,entity_type,created_at FROM audit_events ORDER BY created_at DESC LIMIT 40').all();return reply({events:result.results})}
+if(path==='/api/staff'&&request.method==='POST'){
+if(user.role!=='owner')return reply({error:'Лише власник може створювати працівників'},403);
+const input=await body(request);
+if(typeof input.name!=='string'||typeof input.password!=='string'||!['barista','manager'].includes(input.role)||input.name.trim().length<2||input.name.trim().length>80||input.password.length<14||input.password.length>256)return reply({error:'Перевірте ім’я, роль і пароль (від 14 символів)'},400);
+const exists=await env.DB.prepare('SELECT id FROM employees WHERE display_name=? LIMIT 1').bind(input.name.trim()).first();if(exists)return reply({error:'Працівник з таким ім’ям уже існує'},409);
+const id=crypto.randomUUID(),hash=await passwordHash(input.password);
+await env.DB.prepare('INSERT INTO employees(id,display_name,role,password_hash) VALUES(?,?,?,?)').bind(id,input.name.trim(),input.role,hash).run();
+await audit(env,user.id,'employee.created','employee',id);
+return reply({ok:true},201)
+}
+const match=path.match(/^\/api\/staff\/([a-f0-9-]{36})\/status$/);
+if(match&&request.method==='POST'){
+if(user.role!=='owner')return reply({error:'Лише власник може змінювати доступ'},403);
+if(match[1]===user.id)return reply({error:'Не можна вимкнути власний обліковий запис'},400);
+const input=await body(request);if(typeof input.active!=='boolean')return reply({error:'Невірний статус'},400);
+const target=await env.DB.prepare('SELECT id,role FROM employees WHERE id=?').bind(match[1]).first();
+if(!target)return reply({error:'Працівника не знайдено'},404);
+if(target.role==='owner')return reply({error:'Не можна змінювати статус власника'},403);
+await env.DB.prepare('UPDATE employees SET active=? WHERE id=?').bind(input.active?1:0,match[1]).run();
+if(!input.active)await env.DB.prepare("UPDATE sessions SET revoked_at=? WHERE employee_id=? AND revoked_at IS NULL").bind(new Date().toISOString(),match[1]).run();
+await audit(env,user.id,input.active?'employee.enabled':'employee.disabled','employee',match[1]);
+return reply({ok:true})
+}
 return reply({error:'Маршрут не знайдено'},404)
 }catch(error){console.error('API error',String(error));return reply({error:'Помилка запиту або база ще не підготовлена'},500)}
 }};
