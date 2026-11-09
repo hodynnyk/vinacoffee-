@@ -458,3 +458,44 @@ body[data-view="staff"] main>header .header-right .ghost{min-height:36px;padding
 .vina-staff-footer{font-size:9px}
 }
 @media(max-width:360px){.vina-staff-hero{min-height:330px}.vina-staff-hero h2{font-size:44px}.vina-staff-live{display:none}.vina-staff-wordmark{font-size:17px}.vina-staff-feature h3{font-size:23px}}
+
+/* VINA Quiet Luxury · authentication as a complete product experience */
+body[data-view="auth"]{background:#f5f0e8}
+body[data-view="auth"] .shell{display:block}
+body[data-view="auth"] .sidebar{display:none}
+body[data-view="auth"] main{max-width:1360px;min-height:100dvh;padding:clamp(15px,3vw,38px);display:flex;flex-direction:column}
+body[data-view="auth"] main>header{margin-bottom:clamp(14px,2vw,24px);padding:0 2px}
+body[data-view="auth"] main>header .eyebrow{color:#8c745e;font-size:11px;letter-spacing:.24em}
+body[data-view="auth"] main>header #page-title{font:normal clamp(21px,2.5vw,29px) Georgia,serif;letter-spacing:-.03em}
+body[data-view="auth"] main>header #page-subtitle{font-size:12px}
+body[data-view="auth"] #content{flex:1;display:flex;min-height:0}
+.vina-auth-layout{width:100%;min-height:min(690px,calc(100dvh - 160px));display:grid;grid-template-columns:1.04fr 1fr;border:1px solid #e3d8cb;background:#fffcf7;box-shadow:0 24px 75px #3021160d}
+.vina-auth-story{background:#211b17;color:#f7efe5;position:relative;overflow:hidden;padding:clamp(25px,3.4vw,47px);display:flex;flex-direction:column;justify-content:space-between;isolation:isolate}
+.vina-auth-story::before{content:"";position:absolute;width:590px;height:590px;border:1px solid #c7aa853b;border-radius:50%;right:-315px;top:-190px;box-shadow:0 0 0 80px #c7aa8509,0 0 0 160px #c7aa8508;z-index:-1;pointer-events:none}
+.vina-auth-story-head,.vina-auth-story-foot,.vina-auth-panel-top,.vina-auth-panel-foot{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.vina-auth-story-head>span:first-child{font-weight:780;font-size:26px;letter-spacing:.22em}
+.vina-auth-story-head>span:last-child,.vina-auth-story-foot,.vina-auth-kicker{font-size:10px;letter-spacing:.19em;color:#c7b39f}
+.vina-auth-story-body{padding:45px 0}
+.vina-auth-story-body h2{font:normal clamp(53px,5.7vw,92px)/1.02 Georgia,"Times New Roman",serif;letter-spacing:-.06em;margin:23px 0}
+.vina-auth-story-body h2 em{font-weight:400;color:#ddc1a0}
+.vina-auth-story-body p{color:#c8b6a5;max-width:340px;font-size:15px}
+.vina-auth-story-foot{border-top:1px solid #bfa98e3c;padding-top:21px}
+.vina-auth-panel{display:flex;flex-direction:column;justify-content:space-between;padding:clamp(25px,3.4vw,47px);min-width:0}
+.vina-auth-panel-top,.vina-auth-panel-foot{font-size:10px;letter-spacing:.17em;color:#9a806a;font-weight:650}
+.vina-auth-form-wrap{width:min(100%,395px);margin:45px auto}
+.vina-auth-welcome{font-size:10px;letter-spacing:.21em;color:#a1846d;font-weight:700}
+.vina-auth-title{font:normal clamp(39px,4vw,57px)/1.1 Georgia,serif;letter-spacing:-.05em;color:#2d211b;margin:16px 0 13px}
+.vina-auth-description{font-size:13px;margin-bottom:31px}
+.vina-auth-form-wrap form{gap:19px}
+.vina-auth-form-wrap label{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:680;color:#6d5544;gap:10px}
+.vina-auth-form-wrap input{border:0;border-bottom:1px solid #d7c6b6;border-radius:0;background:transparent;min-height:51px;padding:12px 0;color:#2b211b;outline-offset:3px}
+.vina-auth-form-wrap input:focus{border-bottom-color:#5c4030;outline:0;box-shadow:0 1px 0 #5c4030}
+.vina-auth-form-wrap .button{background:#2b211b;border-color:#2b211b;border-radius:4px;min-height:55px;margin-top:9px;display:flex;justify-content:space-between;padding:13px 20px;font-size:13px;letter-spacing:.025em}
+.vina-auth-form-wrap .button:hover{background:#49372b;border-color:#49372b}
+.vina-auth-form-wrap .button span{font-size:19px;font-weight:400}
+.vina-auth-footnote{margin-top:24px;font-size:11px;color:#9d8979}
+.vina-auth-panel-foot{border-top:1px solid #e7dbce;padding-top:18px}
+@media(max-width:800px){.vina-auth-layout{grid-template-columns:1fr}.vina-auth-story{min-height:310px}.vina-auth-story-body{padding:40px 0 20px}.vina-auth-story-body h2{font-size:58px;margin:16px 0}.vina-auth-panel{min-height:490px}.vina-auth-form-wrap{margin:45px auto}}
+@media(max-width:740px){body[data-view="auth"] main{padding:0 0 25px}body[data-view="auth"] main>header{padding:19px 21px 13px;margin:0}body[data-view="auth"] main>header #page-title{font-size:20px}body[data-view="auth"] main>header #page-subtitle{font-size:11px}.vina-auth-layout{border:0;box-shadow:none}.vina-auth-story{min-height:275px;padding:25px 24px 23px}.vina-auth-story-head>span:first-child{font-size:20px}.vina-auth-story-head>span:last-child{font-size:8px}.vina-auth-story-body{padding:30px 0 20px}.vina-auth-story-body h2{font-size:clamp(45px,12vw,61px);margin:12px 0}.vina-auth-story-body p{font-size:12px;max-width:250px}.vina-auth-story-foot{font-size:8px;padding-top:14px}.vina-auth-panel{min-height:480px;padding:29px 24px 24px}.vina-auth-form-wrap{margin:35px auto 40px}.vina-auth-title{font-size:43px}.vina-auth-description{margin-bottom:23px}.vina-auth-form-wrap input{font-size:16px}.vina-auth-panel-top,.vina-auth-panel-foot{font-size:9px}}
+@media(max-width:360px){.vina-auth-story-body h2{font-size:43px}.vina-auth-story{min-height:255px}.vina-auth-panel{padding:24px 20px}}
+@media(prefers-reduced-motion:no-preference){.vina-auth-story{animation:vina-reveal .55s cubic-bezier(.22,1,.36,1) both}.vina-auth-panel{animation:vina-reveal .55s .1s cubic-bezier(.22,1,.36,1) both}}
