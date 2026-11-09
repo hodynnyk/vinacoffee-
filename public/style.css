@@ -544,3 +544,39 @@ body[data-view="admin"] .overview-avatar{background:#eee0d0;color:#5a4234}
 body[data-view="admin"] .overview-actions .ghost{min-height:53px}
 @media(max-width:740px){body[data-view="admin"] .sidebar{padding:17px 17px 12px}body[data-view="admin"] main{padding:24px 17px 50px}body[data-view="admin"] main>header{padding-bottom:18px;margin-bottom:20px}.vina-centre-hero{min-height:380px!important;padding:25px 23px 21px!important}.vina-centre-hero-main{display:block;padding:26px 0}.vina-centre-hero h2{font-size:clamp(43px,11vw,62px)!important}.vina-centre-hero p{font-size:12px}.vina-centre-hero .button{width:100%;margin-top:24px}.vina-centre-hero-top>span:last-child{font-size:8px;text-align:right}.vina-centre-hero-bottom{font-size:8px}body[data-view="admin"] .overview-stats .card{padding:22px}body[data-view="admin"] .metric{font-size:48px}}
 @media(max-width:370px){.vina-centre-hero h2{font-size:40px!important}.vina-centre-hero-top small{display:block;margin-top:5px}}
+
+/* HOTFIX: mobile Data Centre — correct iPhone layout, no overlapping labels */
+.vina-centre-hero-top,.vina-centre-hero-bottom{min-width:0}
+.vina-centre-hero-top>span,.vina-centre-hero-bottom>span{min-width:0}
+.vina-centre-hero-top>span:first-child{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.vina-centre-hero-top small{display:inline-block;white-space:normal}
+.vina-centre-hero-top>span:last-child,.vina-centre-hero-bottom>span:last-child{text-align:right;overflow-wrap:normal}
+@media(max-width:740px){
+body[data-view="admin"] main{padding:19px 16px 48px}
+body[data-view="admin"] main>header{gap:12px;align-items:stretch}
+body[data-view="admin"] main>header h1{font-size:clamp(25px,7vw,32px);line-height:1.13;overflow-wrap:break-word}
+body[data-view="admin"] main>header .header-right{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%}
+body[data-view="admin"] main>header .header-right .ghost{width:100%;min-width:0;min-height:44px;padding:9px 7px;font-size:12px}
+body[data-view="admin"] .vina-centre-hero{padding:24px 21px 20px!important;min-height:0!important;border-radius:7px!important;gap:26px}
+body[data-view="admin"] .vina-centre-hero-top{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+body[data-view="admin"] .vina-centre-hero-top>span:first-child{display:grid;gap:4px;font-size:18px;line-height:1.1}
+body[data-view="admin"] .vina-centre-hero-top small{font-size:8px;letter-spacing:.12em}
+body[data-view="admin"] .vina-centre-hero-top>span:last-child{font-size:8px;letter-spacing:.08em;max-width:95px;line-height:1.45}
+body[data-view="admin"] .vina-centre-hero-main{display:block;padding:4px 0 0}
+body[data-view="admin"] .vina-centre-hero h2{font-size:clamp(35px,9.5vw,48px)!important;line-height:1.08!important;letter-spacing:-.05em;margin:13px 0 14px!important;overflow-wrap:normal}
+body[data-view="admin"] .vina-centre-hero p{font-size:12px;line-height:1.55;max-width:310px}
+body[data-view="admin"] .vina-centre-hero .button{width:100%;min-height:49px;margin-top:21px;font-size:12px;min-width:0}
+body[data-view="admin"] .vina-centre-hero-bottom{display:flex;gap:12px;align-items:start;font-size:8px;line-height:1.45;letter-spacing:.08em}
+body[data-view="admin"] .vina-centre-hero-bottom>span:first-child{white-space:nowrap}
+body[data-view="admin"] .vina-centre-hero-bottom>span:last-child{max-width:140px}
+body[data-view="admin"] .overview-stats{display:grid;grid-template-columns:1fr!important;gap:10px;margin-top:13px}
+body[data-view="admin"] .overview-stats .card{grid-column:auto!important;min-height:0;padding:19px 21px!important;border-radius:7px!important}
+body[data-view="admin"] .overview-stats .metric{font-size:43px;margin:12px 0 8px}
+body[data-view="admin"] .overview-stats .muted{font-size:11px}
+body[data-view="admin"] .overview-stats p{font-size:12px}
+body[data-view="admin"] .overview-columns{display:grid;grid-template-columns:1fr;gap:18px}
+body[data-view="admin"] .overview-columns>section{min-width:0}
+body[data-view="admin"] .overview-actions{display:grid;grid-template-columns:1fr;gap:9px}
+body[data-view="admin"] .overview-actions .ghost{width:100%}
+}
+@media(max-width:380px){body[data-view="admin"] .vina-centre-hero h2{font-size:35px!important}body[data-view="admin"] .vina-centre-hero-top>span:last-child{max-width:82px}}
