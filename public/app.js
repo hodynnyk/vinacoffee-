@@ -40,33 +40,60 @@ document.querySelector('nav').innerHTML='<button class="active" type="button">М
 const tools=[['shift','Зміна','Відкрити або закрити зміну','◷'],['tasks','Планер','Виконання щоденних завдань','☷'],['customer','Знайти клієнта','Пошук гостя за телефоном','⌕'],['supply','Постачання','Повідомити, що товар закінчився','↗'],['history','Історія','Попередні робочі зміни','↺'],['settings','Налаштування','Вигляд і безпека','⚙']];
 content.innerHTML='<div class="vina-staff-app"><section class="vina-staff-hero"><div class="vina-staff-hero-top"><span class="vina-staff-wordmark">VINA <span>／ STAFF</span></span><span class="vina-staff-edition">WORKSPACE · 01</span></div><div class="vina-staff-hero-body"><div><span class="vina-staff-overline">ВАШ РОБОЧИЙ ДЕНЬ</span><h2>Вітаємо,<br><em>'+esc(user.name)+'</em></h2><p>Усе важливе — на своєму місці.</p></div><div class="vina-staff-hero-seal" aria-hidden="true"><span>V</span><small>COFFEE<br>HOUSE</small></div></div><div class="vina-staff-hero-footer"><span>ПРОСТІР ДЛЯ СПОКІЙНОЇ РОБОТИ</span><span aria-hidden="true">✦</span></div></section><div class="vina-staff-top-actions"><button type="button" id="vina-staff-settings-shortcut" class="vina-staff-settings-shortcut">⚙ Налаштування</button></div><section class="vina-staff-features vina-staff-hub"><div class="vina-staff-section-title"><div><span class="vina-staff-index">01 — ГОЛОВНА</span><h2>Робочий простір</h2></div></div><div class="vina-staff-feature-grid">'+tools.map(([id,name,desc,mark])=>'<button type="button" class="vina-staff-feature vina-staff-hub-action vina-staff-tile-'+id+'" data-staff-section="'+id+'"><span class="vina-staff-feature-top"><span>VINA / STAFF</span><span class="vina-staff-feature-symbol" aria-hidden="true">'+mark+'</span></span><span><strong>'+name+'</strong><small>'+desc+'</small></span><span class="vina-staff-hub-arrow" aria-hidden="true">↗</span></button>').join('')+'</div></section><div id="vina-staff-detail" hidden><button type="button" class="vina-staff-back" id="vina-staff-back">← До головної</button><div class="vina-staff-detail-shift" data-staff-panel="shift" hidden><section class="vina-staff-focus"><div class="vina-staff-section-title"><div><span class="vina-staff-index">01 — ЗАРАЗ</span><h2>Робоча зміна</h2></div><span class="vina-staff-live"><i></i> ПОТОЧНИЙ СТАН</span></div><article class="vina-staff-shift"><div class="vina-staff-shift-copy"><span class="vina-staff-shift-label">СТАТУС ВАШОЇ ЗМІНИ</span><div id="shift-status" class="vina-staff-status">'+loadingRows(1)+'</div><p>Відкривайте та завершуйте зміну одним натисканням.</p></div><div id="shift-action" class="vina-staff-shift-action"></div></article></section></div><section class="vina-staff-history" data-staff-panel="supply" hidden><div class="vina-staff-section-title"><div><span class="vina-staff-index">03 — ПОСТАЧАННЯ</span><h2>Повідомити про нестачу</h2></div></div><form id="vina-supply-form" class="vina-staff-history-panel"><label>Що закінчилося?<select name="itemId" id="vina-supply-catalog" required><option value="">Оберіть товар зі складу</option></select></label><label>Примітка (необов’язково)<textarea name="note" maxlength="300" rows="2" placeholder="Деталі для власника"></textarea></label><button class="button" type="submit">Надіслати заявку</button></form></section><section class="vina-staff-history" data-staff-panel="tasks" hidden><div class="vina-staff-section-title"><div><span class="vina-staff-index">04 — ЗАВДАННЯ</span><h2>Мої завдання на сьогодні</h2></div></div><div id="vina-staff-tasks" class="vina-staff-history-panel">Завантажуємо завдання…</div></section><section class="vina-staff-history" data-staff-panel="history" hidden><div class="vina-staff-section-title"><div><span class="vina-staff-index">05 — АРХІВ</span><h2>Історія змін</h2></div><button type="button" class="vina-staff-refresh" id="refresh-my-shifts" aria-label="Оновити робочі зміни">Оновити ↻</button></div><div id="my-shifts" class="vina-staff-history-panel">'+loadingRows(2)+'</div></section><section data-staff-panel="settings" hidden class="vina-staff-history"><div class="vina-staff-section-title"><div><span class="vina-staff-index">ПЕРСОНАЛІЗАЦІЯ</span><h2>Налаштування</h2></div></div><div class="vina-staff-history-panel vina-staff-settings"><div><strong>Головна сторінка</strong><p>Оберіть, як відображати робочі інструменти.</p><label class="vina-staff-setting-toggle"><input type="checkbox" id="vina-staff-full-mode"> Повноцінний режим — усі робочі розділи на головній</label></div><div><strong>Безпека облікового запису</strong><p>Змінити пароль входу до VINA Staff.</p><button type="button" class="ghost" id="vina-staff-password">Змінити пароль ↗</button></div></div></section><section data-staff-panel="customer" hidden class="vina-staff-history"><div class="vina-staff-section-title"><div><span class="vina-staff-index">КЛІЄНТИ</span><h2>Знайти клієнта</h2></div></div><div class="vina-staff-history-panel"><p>Пошук за номером телефону з’явиться після підключення бонусної програми. Дані гостей поки недоступні.</p></div></section></div><footer class="vina-staff-footer">VINA COFFEE <span>З ТУРБОТОЮ ПРО КОЖНУ ДЕТАЛЬ</span></footer></div>';
 const staffHub=$('.vina-staff-hub'),staffDetail=$('#vina-staff-detail');
-const fullModeKey='vina-staff-full-home';
-let fullMode=false;
-try{fullMode=localStorage.getItem(fullModeKey)==='true'}catch{}
+const tileGrid=staffHub.querySelector('.vina-staff-feature-grid');
+const ids=['shift','tasks','customer','supply','history'];
+const storageKey='vina-staff-layout-v2';
+const defaults={order:['shift','tasks','customer','supply','history'],expanded:['shift']};
+let layout={order:[...defaults.order],expanded:[...defaults.expanded]};
+try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&Array.isArray(saved.order)&&Array.isArray(saved.expanded)){layout.order=[...new Set(saved.order.filter(x=>ids.includes(x))),...ids.filter(x=>!saved.order.includes(x))];layout.expanded=saved.expanded.filter(x=>ids.includes(x))}}catch{}
+const persist=()=>{try{localStorage.setItem(storageKey,JSON.stringify(layout))}catch{}};
+const panels=Object.fromEntries([...staffDetail.querySelectorAll('[data-staff-panel]')].map(el=>[el.dataset.staffPanel,el]));
+const tiles=Object.fromEntries([...tileGrid.querySelectorAll('[data-staff-section]')].map(el=>[el.dataset.staffSection,el]));
+const settingsPanel=panels.settings;
 const fullToggle=$('#vina-staff-full-mode');
-fullToggle.checked=fullMode;
-function renderStaffMode(){
- staffHub.hidden=fullMode;
- staffDetail.hidden=!fullMode;
- $('#vina-staff-back').hidden=fullMode;
- staffDetail.querySelectorAll('[data-staff-panel]').forEach(panel=>{panel.hidden=!fullMode&&panel.dataset.staffPanel!==activeStaffSection});
- document.body.classList.toggle('vina-staff-full-mode',fullMode);
-}
-let activeStaffSection='shift';
-function openStaffSection(id){
- activeStaffSection=id;
- if(fullMode&&id!=='settings'){document.querySelector('[data-staff-panel="'+id+'"]')?.scrollIntoView({behavior:'smooth',block:'start'});return}
- staffHub.hidden=true;staffDetail.hidden=false;
+const settingBody=settingsPanel.querySelector('.vina-staff-settings');
+settingBody.firstElementChild.innerHTML='<strong>Компонування головної</strong><p>Для кожного блоку оберіть плитку або розгорнутий вигляд. Стрілками змінюйте порядок.</p><div id="vina-staff-layout-controls"></div><button type="button" class="ghost" id="vina-staff-layout-reset">Відновити стандартний вигляд</button>';
+fullToggle.closest('label')?.remove();
+function renderLayout(){
+ staffHub.hidden=false;
+ staffDetail.hidden=true;
+ document.body.classList.remove('vina-staff-full-mode');
  $('#vina-staff-back').hidden=false;
- staffDetail.querySelectorAll('[data-staff-panel]').forEach(panel=>{panel.hidden=panel.dataset.staffPanel!==id});
+ layout.order.forEach(id=>{
+  const tile=tiles[id],panel=panels[id];
+  if(!tile||!panel)return;
+  tileGrid.appendChild(tile);
+  let wrapper=document.getElementById('vina-staff-inline-'+id);
+  if(!wrapper){wrapper=document.createElement('div');wrapper.id='vina-staff-inline-'+id;wrapper.className='vina-staff-inline';wrapper.dataset.staffInline=id}
+  tileGrid.appendChild(wrapper);
+  const expanded=layout.expanded.includes(id);
+  tile.hidden=expanded;
+  wrapper.hidden=!expanded;
+  if(expanded){
+   wrapper.appendChild(panel);panel.hidden=false;
+   let collapse=wrapper.querySelector('[data-collapse]');
+   if(!collapse){collapse=document.createElement('button');collapse.type='button';collapse.className='vina-staff-inline-collapse';collapse.dataset.collapse=id;collapse.textContent='Згорнути до плитки ↑';wrapper.insertBefore(collapse,wrapper.firstChild);collapse.onclick=()=>{layout.expanded=layout.expanded.filter(x=>x!==id);persist();renderLayout()}}
+  }else{staffDetail.appendChild(panel);panel.hidden=true}
+ });
+ settingsPanel.hidden=true;
+ const controls=$('#vina-staff-layout-controls');
+ controls.innerHTML=layout.order.map((id,index)=>'<div class="vina-staff-layout-row"><span>'+({shift:'Робоча зміна',tasks:'Планер',customer:'Клієнти',supply:'Постачання',history:'Історія'})[id]+'</span><select data-layout-mode="'+id+'" aria-label="Вигляд блоку"><option value="tile"'+(!layout.expanded.includes(id)?' selected':'')+'>Плитка</option><option value="expanded"'+(layout.expanded.includes(id)?' selected':'')+'>Розгорнутий</option></select><button type="button" data-layout-move="'+id+'" data-direction="-1" '+(index===0?'disabled':'')+' aria-label="Вище">↑</button><button type="button" data-layout-move="'+id+'" data-direction="1" '+(index===layout.order.length-1?'disabled':'')+' aria-label="Нижче">↓</button></div>').join('');
+ controls.querySelectorAll('[data-layout-mode]').forEach(el=>el.onchange=()=>{const id=el.dataset.layoutMode;layout.expanded=layout.expanded.filter(x=>x!==id);if(el.value==='expanded')layout.expanded.push(id);persist();renderLayout()});
+ controls.querySelectorAll('[data-layout-move]').forEach(el=>el.onclick=()=>{const idx=layout.order.indexOf(el.dataset.layoutMove),next=idx+Number(el.dataset.direction);if(next<0||next>=layout.order.length)return;[layout.order[idx],layout.order[next]]=[layout.order[next],layout.order[idx]];persist();renderLayout()});
+}
+function openStaffSection(id){
+ if(id==='settings'){staffHub.hidden=true;staffDetail.hidden=false;staffDetail.querySelectorAll('[data-staff-panel]').forEach(panel=>panel.hidden=panel!==settingsPanel);settingsPanel.hidden=false;window.scrollTo({top:0,behavior:'auto'});return}
+ if(layout.expanded.includes(id)){document.getElementById('vina-staff-inline-'+id)?.scrollIntoView({behavior:'smooth',block:'start'});return}
+ staffHub.hidden=true;staffDetail.hidden=false;
+ staffDetail.querySelectorAll('[data-staff-panel]').forEach(panel=>panel.hidden=panel.dataset.staffPanel!==id);
  window.scrollTo({top:0,behavior:'auto'});
 }
 document.querySelectorAll('[data-staff-section]').forEach(button=>button.onclick=()=>openStaffSection(button.dataset.staffSection));
-$('#vina-staff-back').onclick=()=>{if(fullMode){renderStaffMode()}else{staffDetail.hidden=true;staffHub.hidden=false}window.scrollTo({top:0,behavior:'auto'})};
-fullToggle.onchange=()=>{fullMode=fullToggle.checked;try{localStorage.setItem(fullModeKey,String(fullMode))}catch{}renderStaffMode();toast(fullMode?'Повноцінний режим увімкнено':'Компактний режим увімкнено')};
+$('#vina-staff-back').onclick=()=>{renderLayout();window.scrollTo({top:0,behavior:'auto'})};
 $('#vina-staff-password').onclick=passwordDialog;
 $('#vina-staff-settings-shortcut').onclick=()=>openStaffSection('settings');
-if(fullMode)renderStaffMode();
+$('#vina-staff-layout-reset').onclick=()=>{layout={order:[...defaults.order],expanded:[...defaults.expanded]};persist();renderLayout();toast('Стандартне компонування відновлено')};
+renderLayout();
 $('#vina-supply-form').onsubmit=async event=>{event.preventDefault();const form=event.currentTarget;const button=form.querySelector('[type=submit]');const values=Object.fromEntries(new FormData(form));pending(button,true,'Надсилаємо…');try{await post('supply-requests',{itemId:values.itemId,note:values.note||''});form.reset();toast('Товар позначено як відсутній. Власника повідомлено')}catch(error){msg(error.message)}finally{pending(button,false)}};
 $('#refresh-my-shifts').onclick=async()=>{const button=$('#refresh-my-shifts');if(button.disabled)return;pending(button,true,'Оновлюємо…');try{await loadMyShifts()}finally{pending(button,false)}};
 await loadMyShifts();await loadStaffTasks();try{const catalog=await api('inventory/catalog');const list=$('#vina-supply-catalog');if(list)list.innerHTML='<option value="">Оберіть товар зі складу</option>'+catalog.items.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('')}catch(error){console.warn('Каталог товарів недоступний',error)}
