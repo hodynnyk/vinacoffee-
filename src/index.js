@@ -75,6 +75,27 @@ if(path==='/api/shifts'&&request.method==='GET'){
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 const rows=await env.DB.prepare('SELECT shifts.id,employees.display_name,shifts.opened_at,shifts.closed_at,shifts.close_reason FROM shifts JOIN employees ON employees.id=shifts.employee_id ORDER BY shifts.opened_at DESC LIMIT 100').all();return reply({shifts:rows.results})}
 }
+// Daily checklist: owner manages templates; staff completes each item once per Kyiv date.
+if(path.startsWith('/api/tasks')){
+await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_templates (id TEXT PRIMARY KEY, title TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)").run();
+await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_completions (task_id TEXT NOT NULL REFERENCES task_templates(id), employee_id TEXT NOT NULL REFERENCES employees(id), work_date TEXT NOT NULL, completed_at TEXT NOT NULL, PRIMARY KEY(task_id,employee_id,work_date))").run();
+const workDate=kyivLocalDate(new Date());
+if(path==='/api/tasks'&&request.method==='GET'){
+const rows=await env.DB.prepare("SELECT t.id,t.title,t.active,c.completed_at FROM task_templates t LEFT JOIN task_completions c ON c.task_id=t.id AND c.employee_id=? AND c.work_date=? WHERE t.active=1 OR ? IN ('owner','manager') ORDER BY t.created_at,t.id").bind(user.id,workDate,user.role).all();return reply({date:workDate,tasks:rows.results})}
+if(path==='/api/tasks'&&request.method==='POST'){
+if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+const input=await body(request);if(typeof input.title!=='string'||input.title.trim().length<3||input.title.trim().length>120)return reply({error:'Назва завдання має містити від 3 до 120 символів'},400);
+const id=crypto.randomUUID();await env.DB.prepare('INSERT INTO task_templates(id,title,created_at) VALUES(?,?,?)').bind(id,input.title.trim(),new Date().toISOString()).run();await audit(env,user.id,'task.created','task',id);return reply({ok:true,id},201)}
+const completion=path.match(/^\\/api\\/tasks\\/([a-f0-9-]{36})\\/complete$/);
+if(completion&&request.method==='POST'){
+const task=await env.DB.prepare('SELECT id FROM task_templates WHERE id=? AND active=1').bind(completion[1]).first();if(!task)return reply({error:'Завдання не знайдено'},404);
+await env.DB.prepare('INSERT OR IGNORE INTO task_completions(task_id,employee_id,work_date,completed_at) VALUES(?,?,?,?)').bind(task.id,user.id,workDate,new Date().toISOString()).run();return reply({ok:true,date:workDate})}
+const status=path.match(/^\\/api\\/tasks\\/([a-f0-9-]{36})\\/status$/);
+if(status&&request.method==='POST'){
+if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+const input=await body(request);if(typeof input.active!=='boolean')return reply({error:'Невірний статус'},400);
+const result=await env.DB.prepare('UPDATE task_templates SET active=? WHERE id=?').bind(input.active?1:0,status[1]).run();if(!result.meta.changes)return reply({error:'Завдання не знайдено'},404);await audit(env,user.id,input.active?'task.enabled':'task.disabled','task',status[1]);return reply({ok:true})}
+}
 if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:true,bonuses:false,tasks:false,stockReports:false}});
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 if(path==='/api/staff'&&request.method==='GET'){const result=await env.DB.prepare('SELECT id,display_name,role,rank,active,created_at FROM employees ORDER BY created_at DESC LIMIT 100').all();return reply({staff:result.results})}
