@@ -138,3 +138,47 @@ body[data-view="auth"] .sidebar .logo img{width:138px}
 body[data-view="auth"] .sidebar .logo{width:204px;padding:10px 12px;border-radius:18px}
 body[data-view="auth"] .sidebar .logo img{width:180px}
 @media(max-width:740px){.sidebar .logo{margin-bottom:0}.sidebar .logo img{width:126px}body[data-view="auth"] .sidebar .logo{width:184px;padding:9px 12px}body[data-view="auth"] .sidebar .logo img{width:160px}}
+
+/* VINA Staff · refined product design */
+:root{--vina-ink:#34261f;--vina-brown:#583e2e;--vina-soft:#f3ece3;--vina-border:#e9dfd4}
+body[data-view="staff"]{background:#f8f6f2}
+body[data-view="staff"] main{max-width:1080px}
+body[data-view="staff"] header{border-bottom:0;margin-bottom:18px;padding-bottom:0}
+body[data-view="staff"] h1{font-size:clamp(28px,3.2vw,38px)}
+body[data-view="staff"] .staff-welcome{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#34261f;color:#fffaf4;padding:32px 36px;border-radius:24px;overflow:hidden;position:relative}
+body[data-view="staff"] .staff-welcome h2{font:600 clamp(25px,3.2vw,35px) Georgia,serif;margin:12px 0 10px;letter-spacing:-.025em}
+body[data-view="staff"] .staff-welcome p{color:#e1d1c4}
+body[data-view="staff"] .staff-eyebrow{font-size:10px;font-weight:750;letter-spacing:.15em;color:#a88b74}
+body[data-view="staff"] .staff-welcome .staff-eyebrow{color:#d8bda5}
+body[data-view="staff"] .staff-welcome-mark{font-size:94px;line-height:1;color:#80624b;opacity:.8;transform:rotate(-15deg)}
+body[data-view="staff"] .staff-section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:30px 0 14px}
+body[data-view="staff"] .staff-section-head h2{font:600 23px Georgia,serif;color:var(--vina-ink);margin:7px 0 0}
+body[data-view="staff"] .staff-live-label{font-size:11px;color:#8a796b}
+body[data-view="staff"] .staff-shift-card{background:#fffdfa;border:1px solid var(--vina-border);border-radius:20px;box-shadow:0 6px 24px #32211508;padding:25px 27px}
+body[data-view="staff"] #shift-status{margin-top:12px!important;font-size:14px}
+body[data-view="staff"] #shift-status p{margin-top:8px!important}
+body[data-view="staff"] #shift-action .button{background:#634733;border-color:#634733;min-height:50px;border-radius:13px;font-size:14px}
+body[data-view="staff"] .staff-tools{display:grid;grid-template-columns:1fr;gap:10px}
+body[data-view="staff"] .staff-tool{display:flex;align-items:center;gap:18px;padding:20px 22px;background:#fffdfa;border:1px solid var(--vina-border);border-radius:17px;min-width:0}
+body[data-view="staff"] .staff-tool-number{display:grid;place-items:center;width:43px;height:43px;flex-shrink:0;border-radius:13px;background:#f2e9df;color:#80614c;font-size:12px;font-weight:800}
+body[data-view="staff"] .staff-tool-copy{flex:1;min-width:0}
+body[data-view="staff"] .staff-tool-copy h3{font-size:15px;color:#3c2c23;font-weight:700;margin:0 0 5px}
+body[data-view="staff"] .staff-tool-copy p{font-size:12px}
+body[data-view="staff"] .staff-tool-badge{font-size:10px;color:#987a62;background:#f5eee6;border-radius:999px;padding:8px 10px;white-space:nowrap}
+body[data-view="staff"] #my-shifts{padding:20px;overflow-x:auto}
+body[data-view="staff"] .header-right .ghost{border-radius:12px;min-height:42px}
+@media(max-width:740px){
+body[data-view="staff"] main{padding:25px 16px 55px}
+body[data-view="staff"] .staff-welcome{padding:26px 23px;border-radius:20px}
+body[data-view="staff"] .staff-welcome h2{font-size:27px}
+body[data-view="staff"] .staff-welcome-mark{font-size:60px}
+body[data-view="staff"] .staff-section-head{margin-top:27px}
+body[data-view="staff"] .staff-section-head h2{font-size:22px}
+body[data-view="staff"] .staff-shift-card{padding:23px}
+body[data-view="staff"] #shift-action{width:100%}
+body[data-view="staff"] #shift-action .button{width:100%;min-height:54px}
+body[data-view="staff"] .staff-tool{padding:17px 15px;gap:12px}
+body[data-view="staff"] .staff-tool-number{width:38px;height:38px}
+body[data-view="staff"] .staff-tool-badge{font-size:9px;padding:7px}
+}
+@media(max-width:370px){body[data-view="staff"] .staff-tool-badge{display:none}body[data-view="staff"] .staff-welcome-mark{display:none}}
