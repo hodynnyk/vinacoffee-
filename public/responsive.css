@@ -543,3 +543,26 @@ body[data-view="staff"] .vina-staff-owner-home>.vina-dc-divider{margin-top:27px}
 .vina-inventory-editor h3{margin:0 0 15px}
 body[data-view="staff"] #vina-supply-form select{display:block;width:100%;box-sizing:border-box;min-height:46px;border-radius:12px;padding:11px 12px;font:inherit;font-size:16px;color:var(--vina-ink,#f4e9dd);background:var(--vina-panel,#342820);border:1px solid var(--vina-border,#786657)}
 @media(max-width:740px){.vina-owner-alert-banner{align-items:flex-start;flex-direction:column;gap:6px}.vina-inventory-editor{padding:15px}}
+
+/* Desktop authentication: override legacy 500px main constraint. */
+@media(min-width:801px){
+ body[data-view="auth"] .shell{display:flex!important;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh}
+ body[data-view="auth"] .sidebar{width:100%!important;max-width:1160px;padding:22px 30px 0!important;flex:0 0 auto}
+ body[data-view="auth"] main{width:min(100%,1160px)!important;max-width:1160px!important;margin:0 auto!important;padding:12px 30px 42px!important;box-sizing:border-box}
+ body[data-view="auth"] main>header{margin:0 0 24px!important}
+ body[data-view="auth"] .vina-auth-layout{display:grid!important;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr)!important;width:100%!important;min-height:600px!important;max-height:none;box-sizing:border-box;border-radius:24px;overflow:hidden}
+ body[data-view="auth"] .vina-auth-story,body[data-view="auth"] .vina-auth-panel{min-width:0!important;width:auto!important;padding:clamp(30px,4vw,56px)!important;box-sizing:border-box}
+ body[data-view="auth"] .vina-auth-story-body h2{font-size:clamp(55px,5vw,80px)!important;line-height:1.05!important;overflow-wrap:normal}
+ body[data-view="auth"] .vina-auth-form-wrap{width:min(100%,390px)!important;margin:40px auto!important}
+ body[data-view="auth"] .vina-auth-title{font-size:clamp(42px,3.8vw,56px)!important}
+}
+@media(min-width:801px) and (max-height:760px){
+ body[data-view="auth"] .shell{justify-content:flex-start}
+ body[data-view="auth"] .vina-auth-layout{min-height:540px!important}
+ body[data-view="auth"] .vina-auth-story-body{padding:20px 0!important}
+ body[data-view="auth"] .vina-auth-form-wrap{margin:20px auto!important}
+}
+@media(min-width:801px) and (max-width:1050px){
+ body[data-view="auth"] .vina-auth-story,body[data-view="auth"] .vina-auth-panel{padding:30px!important}
+ body[data-view="auth"] .vina-auth-story-body h2{font-size:55px!important}
+}
