@@ -71,6 +71,20 @@ if(path==='/api/shifts/close'&&request.method==='POST'){
 const result=await env.DB.prepare("UPDATE shifts SET closed_at=?,close_reason='manual' WHERE employee_id=? AND closed_at IS NULL").bind(now,user.id).run();
 if(result.meta.changes!==1)return reply({error:'Немає відкритої зміни'},409);
 return reply({ok:true,closed_at:now})}
+const detail=path.match(/^\/api\/shifts\/([a-f0-9-]{36})\/details$/);
+if(detail&&request.method==='GET'){
+ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+ const shift=await env.DB.prepare('SELECT s.id,s.employee_id,e.display_name,s.opened_at,s.closed_at,s.close_reason FROM shifts s JOIN employees e ON e.id=s.employee_id WHERE s.id=?').bind(detail[1]).first();
+ if(!shift)return reply({error:'Зміну не знайдено'},404);
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_templates (id TEXT PRIMARY KEY, title TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)").run();
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_completions (task_id TEXT NOT NULL REFERENCES task_templates(id), employee_id TEXT NOT NULL REFERENCES employees(id), work_date TEXT NOT NULL, completed_at TEXT NOT NULL, PRIMARY KEY(task_id,employee_id,work_date))").run();
+ const end=shift.closed_at||new Date().toISOString();
+ const day=kyivLocalDate(shift.opened_at);
+ const completions=await env.DB.prepare("SELECT c.task_id,t.title,c.completed_at FROM task_completions c JOIN task_templates t ON t.id=c.task_id WHERE c.employee_id=? AND c.work_date=? AND c.completed_at>=? AND c.completed_at<=? ORDER BY c.completed_at ASC").bind(shift.employee_id,day,shift.opened_at,end).all();
+ const assigned=await env.DB.prepare('SELECT COUNT(*) AS total FROM task_templates WHERE active=1 AND created_at<=?').bind(end).first();
+ const supplies=await env.DB.prepare("SELECT COUNT(*) AS total FROM supply_requests WHERE employee_id=? AND created_at>=? AND created_at<=?").bind(shift.employee_id,shift.opened_at,end).first().catch(()=>({total:0}));
+ return reply({shift,completions:completions.results||[],metrics:{completed:(completions.results||[]).length,assigned:assigned?.total||0,supplyReports:supplies?.total||0,durationMinutes:Math.max(0,Math.round((Date.parse(end)-Date.parse(shift.opened_at))/60000))}});
+}
 if(path==='/api/shifts'&&request.method==='GET'){
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 const rows=await env.DB.prepare('SELECT shifts.id,employees.display_name,shifts.opened_at,shifts.closed_at,shifts.close_reason FROM shifts JOIN employees ON employees.id=shifts.employee_id ORDER BY shifts.opened_at DESC LIMIT 100').all();return reply({shifts:rows.results})}
