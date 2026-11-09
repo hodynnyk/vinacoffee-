@@ -73,7 +73,7 @@ function staffNavigate(id){
  const active=id==='settings'?'':id;
  sideNav.querySelectorAll('[data-staff-nav]').forEach(button=>{button.classList.toggle('active',button.dataset.staffNav===active)});
  mobile.querySelectorAll('[data-staff-nav]').forEach(button=>{if(button.dataset.staffNav===active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
- more.hidden=true;document.body.classList.remove('vina-menu-open');
+ more.hidden=true;document.body.classList.remove('vina-menu-open');document.querySelector('#vina-mobile-more')?.setAttribute('aria-expanded','false');
  heading(id==='home'?'Огляд робочого дня':id==='settings'?'Налаштування':({shift:'Робоча зміна',tasks:'Планер завдань',schedule:'Мій графік і заяви',customer:'Знайти клієнта',supply:'Постачання',history:'Історія змін'})[id], 'VINA Staff');
  window.scrollTo({top:0,behavior:'auto'});
 }
@@ -82,7 +82,20 @@ sideNav.innerHTML=staffSections.map(([id,label,icon])=>'<button type="button" da
 mobile.innerHTML=staffSections.slice(0,3).map(([id,label,icon])=>'<button type="button" data-staff-nav="'+id+'">'+vinaIcon(icon)+'<small>'+label+'</small></button>').join('')+'<button type="button" id="vina-mobile-more">'+vinaIcon('history')+'<small>Більше</small></button>';
 more.innerHTML=staffSections.slice(3).map(([id,label,icon])=>'<button type="button" data-staff-nav="'+id+'">'+vinaIcon(icon)+' '+label+'</button>').join('');
 document.querySelectorAll('[data-staff-nav],[data-staff-go]').forEach(button=>button.onclick=()=>staffNavigate(button.dataset.staffNav||button.dataset.staffGo));
-$('#vina-mobile-more').onclick=()=>{more.hidden=!more.hidden;document.body.classList.toggle('vina-menu-open',!more.hidden)};
+const moreButton=$('#vina-mobile-more');
+moreButton.setAttribute('aria-controls','vina-mobile-menu');
+moreButton.setAttribute('aria-expanded','false');
+function setStaffMore(open){
+ more.hidden=!open;
+ moreButton.setAttribute('aria-expanded',String(open));
+ moreButton.classList.toggle('active',open);
+ document.body.classList.toggle('vina-menu-open',open);
+}
+moreButton.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();setStaffMore(more.hidden)});
+more.addEventListener('click',event=>{const button=event.target.closest('[data-staff-nav]');if(!button)return;setStaffMore(false);staffNavigate(button.dataset.staffNav)});
+document.addEventListener('click',event=>{if(!more.hidden&&!more.contains(event.target)&&!moreButton.contains(event.target))setStaffMore(false)});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!more.hidden){setStaffMore(false);moreButton.focus()}});
+
 $('#vina-staff-password').onclick=passwordDialog;
 const header=document.querySelector('main>header');if(header)header.classList.add('vina-staff-header');
 const duplicates=[...document.querySelectorAll('main>header button')].filter(button=>/змінити пароль/i.test(button.textContent));duplicates.forEach(button=>button.hidden=true);
