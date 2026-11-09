@@ -360,3 +360,31 @@ body[data-view="staff"] .vina-staff-tile-supply{background-image:radial-gradient
 body[data-view="staff"] .vina-staff-tile-history{background-image:repeating-linear-gradient(90deg,transparent 0 28px,#a68a6b16 29px 30px)}
 body[data-view="staff"] .vina-staff-tile-settings{background-image:radial-gradient(circle at 85% 25%,#b49a7830 0 3px,transparent 4px);background-size:18px 18px}
 @media(max-width:420px){body[data-view="staff"] .vina-staff-layout-row{grid-template-columns:minmax(0,1fr) 105px 34px 34px;gap:4px}body[data-view="staff"] .vina-staff-layout-row button{width:34px}body[data-view="staff"] .vina-staff-layout-row span{font-size:12px}}
+
+/* Staff polish: a single expansion affordance, intentional editorial rhythm. */
+body[data-view="staff"] .vina-staff-hub .vina-staff-section-title{margin-bottom:18px}
+body[data-view="staff"] .vina-staff-hub-action{box-shadow:none;transition:background .18s ease,border-color .18s ease;gap:12px}
+body[data-view="staff"] .vina-staff-hub-action:hover{transform:none}
+body[data-view="staff"] .vina-staff-hub-action .vina-staff-hub-arrow{display:none}
+body[data-view="staff"] .vina-staff-tile-expand{display:inline-block;align-self:flex-start;margin-top:auto;font-size:11px;letter-spacing:.035em;opacity:.7}
+body[data-view="staff"] .vina-staff-hub-action strong{font-size:clamp(21px,2.6vw,27px)}
+body[data-view="staff"] .vina-staff-hub-action small{max-width:28ch}
+body[data-view="staff"] .vina-staff-inline{padding:0 0 14px}
+body[data-view="staff"] .vina-staff-inline-collapse{margin:0 0 12px auto;padding:8px 13px;min-height:38px;font-size:12px}
+body[data-view="staff"] .vina-staff-layout-row{grid-template-columns:minmax(0,1fr) 42px 42px;gap:8px}
+body[data-view="staff"] .vina-staff-layout-row button{width:42px;height:42px}
+body[data-view="staff"] .vina-staff-tile-shift{background-image:radial-gradient(circle at 100% 0%,transparent 0 44px,#d7b18a2b 45px 46px,transparent 47px 85px,#d7b18a1e 86px 87px,transparent 88px)}
+body[data-view="staff"] .vina-staff-tile-tasks{background-image:repeating-radial-gradient(circle at 110% -10%,transparent 0 31px,#bca68b1b 32px 33px,transparent 34px 58px)}
+body[data-view="staff"] .vina-staff-tile-customer{background-image:linear-gradient(135deg,transparent 55%,#7251390d 55% 56%,transparent 56%)}
+body[data-view="staff"] .vina-staff-tile-supply{background-image:radial-gradient(ellipse at 100% 0%,#c5a5801b,transparent 65%)}
+@media(max-width:740px){
+ body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{gap:12px}
+ body[data-view="staff"] .vina-staff-hub-action{padding:17px;min-height:155px}
+ body[data-view="staff"] .vina-staff-tile-shift{min-height:165px}
+ body[data-view="staff"] .vina-staff-tile-supply{min-height:145px}
+ body[data-view="staff"] .vina-staff-tile-history{min-height:130px}
+ body[data-view="staff"] .vina-staff-hub-action strong{font-size:21px}
+ body[data-view="staff"] .vina-staff-hub-action small{font-size:11px}
+ body[data-view="staff"] .vina-staff-layout-row{grid-template-columns:minmax(0,1fr) 42px 42px}
+ body[data-view="staff"] .vina-staff-layout-row button{width:42px}
+}
