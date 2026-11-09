@@ -96,3 +96,26 @@ body[data-view="auth"] .sidebar .logo img{width:160px}
 body[data-view="auth"] .sidebar .logo{width:150px;padding:6px}
 body[data-view="auth"] .sidebar .logo img{width:138px}
 }
+
+/* Data Centre live overview */
+.overview-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:30px 34px;border-radius:22px;background:linear-gradient(120deg,#3a2920,#76513a);color:#fffaf5;margin-bottom:20px}
+.overview-kicker{font-size:10px;letter-spacing:.22em;color:#e2c6ac;font-weight:700}
+.overview-hero h2{font:600 clamp(24px,3vw,34px) Georgia,serif;margin:10px 0}
+.overview-hero p{color:#e6d6c8}
+.overview-hero .button{background:#fff9f0;border-color:#fff9f0;color:#493325;white-space:nowrap}
+.overview-stats{margin-bottom:12px}
+.overview-columns{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.overview-columns .row{margin-bottom:14px}
+.overview-columns .section-title{margin:24px 0 0}
+.overview-columns .card{padding:8px 20px;min-height:110px}
+.overview-person{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid #efe5da}
+.overview-person:last-child{border-bottom:0}
+.overview-avatar{width:40px;height:40px;flex-shrink:0;display:grid;place-items:center;border-radius:13px;background:#efe2d4;color:#684a35;font-weight:750}
+.overview-person-info{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.overview-person-info strong{font-size:14px;color:#463125;overflow-wrap:anywhere}
+.overview-person-info span{font-size:12px;color:#8e7b6b}
+.overview-person .tag{font-size:11px}
+.overview-empty{padding:26px 4px;text-align:center;color:#917c6c;font-size:13px}
+.overview-actions{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:1000px){.overview-columns{grid-template-columns:1fr}}
+@media(max-width:740px){.overview-hero{padding:24px;align-items:stretch;flex-direction:column}.overview-hero .button{align-self:flex-start}.overview-columns .row .ghost{font-size:12px;padding:8px 12px}.overview-columns .card{padding:6px 15px}.overview-person{gap:9px}.overview-avatar{width:35px;height:35px}.overview-actions .ghost{flex:1}}
