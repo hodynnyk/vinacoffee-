@@ -308,3 +308,36 @@ body[data-view="staff"] #vina-staff-detail{min-width:0}
 body[data-view="staff"] #vina-staff-detail [data-staff-panel]{min-width:0}
 @media(max-width:740px){body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}body[data-view="staff"] .vina-staff-hub-action{min-height:142px;padding:15px;border-radius:18px}body[data-view="staff"] .vina-staff-hub-action strong{font-size:clamp(20px,5.2vw,26px)}body[data-view="staff"] .vina-staff-hub-action small{font-size:11px}}
 @media(max-width:350px){body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Curated VINA Staff bento: different scale and purpose, consistent rhythm. */
+body[data-view="staff"] .vina-staff-top-actions{display:flex;justify-content:flex-end;margin-top:-18px}
+body[data-view="staff"] .vina-staff-settings-shortcut{background:transparent;border:1px solid var(--vina-border,#dac9b7);color:var(--vina-ink,#30241e);padding:10px 15px;border-radius:999px;font:600 12px/1.2 inherit;cursor:pointer}
+body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+body[data-view="staff"] .vina-staff-hub-action{grid-column:span 3;min-height:162px;position:relative;overflow:hidden;border:1px solid var(--vina-border,#e2d5c6);background:var(--vina-panel,#fffdf9);box-shadow:0 8px 28px #2c201009}
+body[data-view="staff"] .vina-staff-hub-action:hover{transform:translateY(-2px)}
+body[data-view="staff"] .vina-staff-tile-shift{grid-column:span 4;min-height:215px;background:#33251e;color:#f6e8d7;border-radius:26px}
+body[data-view="staff"] .vina-staff-tile-shift strong,body[data-view="staff"] .vina-staff-tile-shift small{color:#f6e8d7}
+body[data-view="staff"] .vina-staff-tile-tasks{grid-column:span 2;min-height:215px;border-radius:26px}
+body[data-view="staff"] .vina-staff-tile-customer{grid-column:span 3;background:#e7d4bd;border-radius:26px}
+body[data-view="staff"] .vina-staff-tile-customer strong,body[data-view="staff"] .vina-staff-tile-customer small{color:#34251d}
+body[data-view="staff"] .vina-staff-tile-supply{grid-column:span 3;border-radius:26px}
+body[data-view="staff"] .vina-staff-tile-history,body[data-view="staff"] .vina-staff-tile-settings{grid-column:span 3;min-height:120px;border-radius:20px}
+body[data-view="staff"] .vina-staff-settings{display:grid;gap:18px;max-width:760px;padding:22px;border-radius:22px}
+body[data-view="staff"] .vina-staff-settings>div+div{border-top:1px solid var(--vina-border,#e5d7c8);padding-top:18px}
+body[data-view="staff"] .vina-staff-settings strong{font-size:17px}
+body[data-view="staff"] .vina-staff-settings p{font-size:13px;line-height:1.5;opacity:.75}
+body[data-view="staff"] .vina-staff-setting-toggle{display:flex;align-items:flex-start;gap:12px;line-height:1.5;font-size:14px;cursor:pointer}
+body[data-view="staff"] .vina-staff-setting-toggle input{width:20px;height:20px;flex:none;accent-color:#987257}
+body[data-view="staff"].vina-staff-full-mode #vina-staff-detail{display:grid;gap:25px}
+body[data-view="staff"].vina-staff-full-mode #vina-staff-detail>[data-staff-panel]{scroll-margin-top:20px}
+@media(max-width:740px){
+ body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ body[data-view="staff"] .vina-staff-hub-action{grid-column:span 1;min-height:145px;padding:17px}
+ body[data-view="staff"] .vina-staff-tile-shift{grid-column:span 2;min-height:175px}
+ body[data-view="staff"] .vina-staff-tile-tasks{grid-column:span 1;min-height:175px}
+ body[data-view="staff"] .vina-staff-tile-customer{grid-column:span 1;min-height:175px}
+ body[data-view="staff"] .vina-staff-tile-supply{grid-column:span 2;min-height:140px}
+ body[data-view="staff"] .vina-staff-tile-history,body[data-view="staff"] .vina-staff-tile-settings{grid-column:span 1;min-height:125px}
+ body[data-view="staff"] .vina-staff-top-actions{margin-top:-15px}
+}
+@media(max-width:350px){body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body[data-view="staff"] .vina-staff-tile-shift,body[data-view="staff"] .vina-staff-tile-supply{grid-column:span 2}}
