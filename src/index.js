@@ -89,6 +89,77 @@ if(path==='/api/shifts'&&request.method==='GET'){
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 const rows=await env.DB.prepare('SELECT shifts.id,employees.display_name,shifts.opened_at,shifts.closed_at,shifts.close_reason FROM shifts JOIN employees ON employees.id=shifts.employee_id ORDER BY shifts.opened_at DESC LIMIT 100').all();return reply({shifts:rows.results})}
 }
+
+if(path.startsWith('/api/roster')||path.startsWith('/api/leave')){
+ const admin=user.role==='owner'||user.role==='manager';
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS roster_entries(id TEXT PRIMARY KEY,employee_id TEXT NOT NULL,work_date TEXT NOT NULL,start_time TEXT NOT NULL,end_time TEXT NOT NULL,note TEXT NOT NULL DEFAULT '',updated_at TEXT NOT NULL,UNIQUE(employee_id,work_date))").run();
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS leave_requests(id TEXT PRIMARY KEY,employee_id TEXT NOT NULL,category TEXT NOT NULL,start_date TEXT NOT NULL,end_date TEXT NOT NULL,reason TEXT NOT NULL DEFAULT '',status TEXT NOT NULL DEFAULT 'pending',manager_note TEXT NOT NULL DEFAULT '',reviewed_by TEXT,reviewed_at TEXT,created_at TEXT NOT NULL)").run();
+ const day=v=>typeof v==='string'&&v.length===10&&v[4]==='-'&&v[7]==='-'&&!Number.isNaN(Date.parse(v+'T00:00:00Z'))&&new Date(v+'T00:00:00Z').toISOString().slice(0,10)===v;
+ const span=(a,b)=>Math.round((Date.parse(b+'T00:00:00Z')-Date.parse(a+'T00:00:00Z'))/86400000)+1;
+ if(path==='/api/roster'&&request.method==='GET'){
+  const month=new URL(request.url).searchParams.get('month')||kyivLocalDate(new Date()).slice(0,7);
+  if(month.length!==7||!day(month+'-01'))return reply({error:'Невірний місяць'},400);
+  const rows=await env.DB.prepare("SELECT r.*,e.display_name FROM roster_entries r JOIN employees e ON e.id=r.employee_id WHERE r.work_date LIKE ? AND (?=1 OR r.employee_id=?) ORDER BY r.work_date,r.start_time").bind(month+'%',admin?1:0,user.id).all();
+  return reply({entries:rows.results});
+ }
+ if(path==='/api/roster'&&request.method==='POST'){
+  if(!admin)return reply({error:'Недостатньо прав'},403);
+  const v=await body(request);
+  const time=x=>typeof x==='string'&&x.length===5&&x[2]===':'&&Number(x.slice(0,2))<24&&Number(x.slice(3))<60;
+  if(!day(v.workDate)||!time(v.startTime)||!time(v.endTime)||v.startTime===v.endTime||typeof v.employeeId!=='string'||typeof(v.note||'')!=='string'||(v.note||'').length>300)return reply({error:'Перевірте дані зміни'},400);
+  const staff=await env.DB.prepare("SELECT id FROM employees WHERE id=? AND active=1 AND role='barista'").bind(v.employeeId).first();
+  if(!staff)return reply({error:'Працівника не знайдено'},404);
+  const absent=await env.DB.prepare("SELECT id FROM leave_requests WHERE employee_id=? AND status='approved' AND category!='statement' AND start_date<=? AND end_date>=? LIMIT 1").bind(v.employeeId,v.workDate,v.workDate).first();
+  if(absent)return reply({error:'На цю дату погоджена відсутність'},409);
+  const id=crypto.randomUUID();
+  await env.DB.prepare("INSERT INTO roster_entries(id,employee_id,work_date,start_time,end_time,note,updated_at) VALUES(?,?,?,?,?,?,?) ON CONFLICT(employee_id,work_date) DO UPDATE SET start_time=excluded.start_time,end_time=excluded.end_time,note=excluded.note,updated_at=excluded.updated_at").bind(id,v.employeeId,v.workDate,v.startTime,v.endTime,(v.note||'').trim(),new Date().toISOString()).run();
+  await audit(env,user.id,'roster.saved','roster',id);return reply({ok:true});
+ }
+ if(path.startsWith('/api/roster/')&&request.method==='DELETE'){
+  if(!admin)return reply({error:'Недостатньо прав'},403);
+  const id=path.split('/')[3];const result=await env.DB.prepare('DELETE FROM roster_entries WHERE id=?').bind(id).run();
+  if(!result.meta.changes)return reply({error:'Запис не знайдено'},404);
+  await audit(env,user.id,'roster.deleted','roster',id);return reply({ok:true});
+ }
+ if(path==='/api/leave'&&request.method==='GET'){
+  const year=Number(new URL(request.url).searchParams.get('year')||kyivLocalDate(new Date()).slice(0,4));
+  if(!Number.isInteger(year)||year<2020||year>2100)return reply({error:'Невірний рік'},400);
+  const rows=await env.DB.prepare("SELECT l.*,e.display_name FROM leave_requests l JOIN employees e ON e.id=l.employee_id WHERE (?=1 OR l.employee_id=?) AND (l.start_date<=? AND l.end_date>=? OR l.status='pending') ORDER BY l.created_at DESC LIMIT 250").bind(admin?1:0,user.id,year+'-12-31',year+'-01-01').all();
+  const approved=await env.DB.prepare("SELECT category,start_date,end_date FROM leave_requests WHERE employee_id=? AND status='approved' AND category!='statement' AND start_date<=? AND end_date>=?").bind(user.id,year+'-12-31',year+'-01-01').all();
+  const usage={day_off:0,sick_self:0,sick_document:0};
+  for(const x of approved.results||[])usage[x.category]+=span(x.start_date<year+'-01-01'?year+'-01-01':x.start_date,x.end_date>year+'-12-31'?year+'-12-31':x.end_date);
+  return reply({requests:rows.results,usage,limits:{day_off:24,sick_self:2,sick_document:5}});
+ }
+ if(path==='/api/leave'&&request.method==='POST'){
+  const v=await body(request);
+  if(!['day_off','sick_self','sick_document','statement'].includes(v.category)||!day(v.startDate)||!day(v.endDate)||v.endDate<v.startDate||span(v.startDate,v.endDate)>366||typeof(v.reason||'')!=='string'||(v.reason||'').length>1500)return reply({error:'Перевірте дати та текст заяви'},400);
+  const id=crypto.randomUUID();
+  await env.DB.prepare('INSERT INTO leave_requests(id,employee_id,category,start_date,end_date,reason,created_at) VALUES(?,?,?,?,?,?,?)').bind(id,user.id,v.category,v.startDate,v.endDate,(v.reason||'').trim(),new Date().toISOString()).run();
+  await audit(env,user.id,'leave.requested','leave',id);return reply({ok:true,id},201);
+ }
+ if(path.startsWith('/api/leave/')&&path.endsWith('/review')&&request.method==='POST'){
+  if(!admin)return reply({error:'Недостатньо прав'},403);
+  const id=path.split('/')[3],v=await body(request);
+  if(!['approved','rejected'].includes(v.status)||typeof(v.note||'')!=='string'||(v.note||'').length>500)return reply({error:'Невірне рішення'},400);
+  const item=await env.DB.prepare("SELECT * FROM leave_requests WHERE id=? AND status='pending'").bind(id).first();
+  if(!item)return reply({error:'Заяву вже розглянуто або не знайдено'},404);
+  if(v.status==='approved'&&item.category!=='statement'){
+   const limit={day_off:24,sick_self:2,sick_document:5}[item.category];
+   for(let y=Number(item.start_date.slice(0,4));y<=Number(item.end_date.slice(0,4));y++){
+    const year=String(y),start=year+'-01-01',end=year+'-12-31';
+    const prev=await env.DB.prepare("SELECT start_date,end_date FROM leave_requests WHERE employee_id=? AND category=? AND status='approved' AND start_date<=? AND end_date>=?").bind(item.employee_id,item.category,end,start).all();
+    let used=0;for(const x of prev.results||[])used+=span(x.start_date<start?start:x.start_date,x.end_date>end?end:x.end_date);
+    if(used+span(item.start_date<start?start:item.start_date,item.end_date>end?end:item.end_date)>limit)return reply({error:'Річний ліміт '+limit+' днів буде перевищено'},409);
+   }
+   const clash=await env.DB.prepare("SELECT id FROM roster_entries WHERE employee_id=? AND work_date>=? AND work_date<=? LIMIT 1").bind(item.employee_id,item.start_date,item.end_date).first();
+   if(clash)return reply({error:'Спочатку приберіть заплановані зміни на ці дати'},409);
+   const overlap=await env.DB.prepare("SELECT id FROM leave_requests WHERE id!=? AND employee_id=? AND status='approved' AND category!='statement' AND start_date<=? AND end_date>=? LIMIT 1").bind(id,item.employee_id,item.end_date,item.start_date).first();
+   if(overlap)return reply({error:'Ці дати вже погоджено в іншій заяві'},409);
+  }
+  await env.DB.prepare("UPDATE leave_requests SET status=?,manager_note=?,reviewed_by=?,reviewed_at=? WHERE id=? AND status='pending'").bind(v.status,(v.note||'').trim(),user.id,new Date().toISOString(),id).run();
+  await audit(env,user.id,'leave.'+v.status,'leave',id);return reply({ok:true});
+ }
+}
 // Daily checklist: owner manages templates; staff completes each item once per Kyiv date.
 if(path.startsWith('/api/operations')){
  await env.DB.prepare("CREATE TABLE IF NOT EXISTS operations (id TEXT PRIMARY KEY, kind TEXT NOT NULL CHECK(kind IN ('event','announcement')), title TEXT NOT NULL, details TEXT NOT NULL DEFAULT '', publish_at TEXT NOT NULL, event_at TEXT, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)").run();
