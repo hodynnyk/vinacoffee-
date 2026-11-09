@@ -614,3 +614,33 @@ body[data-view="staff"] .vina-staff-return[hidden]{display:none!important}
 .vina-staff-operation-alert{width:100%;padding:14px 18px;margin:0 0 16px;border-radius:14px;border:1px solid #b88c5b88;background:#b88c5b20;color:inherit;text-align:left;font:inherit;font-size:13px;cursor:pointer}
 .vina-staff-operation-alert[hidden]{display:none!important}
 [data-staff-nav="tasks"].vina-has-alerts:after{content:"●";color:#cb825a;font-size:10px;margin-left:5px}
+
+/* Owner-only shift insights: cards, timeline and comparison */
+.vina-shift-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.vina-shift-card{padding:20px;border:1px solid var(--vina-border,#d8c5b4);border-radius:18px;background:var(--vina-panel,#fffaf4)}
+.vina-shift-card[hidden]{display:none!important}
+.vina-shift-card-top{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.vina-shift-card-top strong{font-size:17px}
+.vina-shift-card-top small{opacity:.7}
+.vina-shift-card .ghost{margin:10px 0;display:block}
+.vina-shift-card label{display:flex;gap:8px;align-items:center;font-size:13px}
+.vina-shift-filters{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin:18px 0}
+.vina-shift-filters label{display:grid;gap:6px;font-size:13px}
+.vina-shift-filters input,.vina-shift-filters select{min-height:42px;border-radius:10px;padding:8px;background:transparent;color:inherit;border:1px solid var(--vina-border,#d8c5b4)}
+.vina-shift-inspection{margin:20px 0;padding:24px}
+.vina-shift-inspection .row{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.vina-shift-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.vina-shift-metrics>div{border-radius:14px;padding:16px;background:color-mix(in srgb,currentColor 5%,transparent)}
+.vina-shift-metrics small{display:block;opacity:.65;margin-bottom:8px}
+.vina-shift-metrics strong{font-size:22px}
+.vina-shift-timeline{border-left:2px solid #b68e69;margin:18px 0 0 54px}
+.vina-shift-moment{position:relative;display:flex;gap:20px;padding:0 0 24px 18px}
+.vina-shift-moment:before{content:"";position:absolute;left:-6px;top:4px;width:10px;height:10px;background:#b68e69;border-radius:50%}
+.vina-shift-moment time{position:absolute;left:-72px;font-weight:700;font-size:13px}
+.vina-shift-moment strong,.vina-shift-moment small{display:block}
+.vina-shift-moment small{opacity:.6;margin-top:5px}
+.vina-compare-grid{display:grid;gap:0}
+.vina-compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--vina-border,#d8c5b4)}
+.vina-compare-row span{font-size:13px;opacity:.75}
+.vina-compare-row strong{text-align:center;overflow-wrap:anywhere}
+@media(max-width:560px){.vina-shift-metrics{grid-template-columns:1fr 1fr}.vina-shift-inspection{padding:15px}.vina-compare-row{font-size:12px;gap:6px}}
