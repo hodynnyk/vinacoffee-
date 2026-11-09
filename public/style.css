@@ -258,3 +258,25 @@ button:focus-visible{outline:3px solid #c7a184;outline-offset:3px}
 @keyframes vina-content-in{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:740px){.vina-toast{left:16px;right:16px;bottom:18px;max-width:none}}
 @media(prefers-reduced-motion:reduce){.vina-content-entering{animation:none}.vina-toast{transition:none}}
+
+/* VINA Motion — shared interaction language */
+:root{--motion-fast:140ms;--motion-normal:230ms;--motion-slow:360ms;--motion-ease:cubic-bezier(.22,1,.36,1)}
+@media(hover:hover) and (pointer:fine){
+.button:not(:disabled),.ghost:not(:disabled),nav button:not(:disabled){transition:background-color var(--motion-normal) ease,border-color var(--motion-normal) ease,color var(--motion-normal) ease,box-shadow var(--motion-normal) ease,transform var(--motion-normal) var(--motion-ease)}
+.button:not(:disabled):hover,.ghost:not(:disabled):hover{transform:translateY(-1px)}
+.card.click:hover{transform:translateY(-2px)}
+}
+.button:not(:disabled):active,.ghost:not(:disabled):active,nav button:not(:disabled):active{transform:scale(.975);transition-duration:var(--motion-fast)}
+#content{min-width:0}
+#content.vina-content-entering{animation:vina-reveal var(--motion-slow) var(--motion-ease) both}
+@keyframes vina-reveal{from{opacity:.3;transform:translate3d(0,9px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+dialog[open]{animation:vina-dialog-in var(--motion-slow) var(--motion-ease) both}
+dialog::backdrop{animation:vina-backdrop-in var(--motion-normal) ease-out both}
+@keyframes vina-dialog-in{from{opacity:0;transform:translate3d(0,14px,0) scale(.975)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@keyframes vina-backdrop-in{from{background:#2b1f1900}to{background:#2b1f19a8}}
+input,select{transition:border-color var(--motion-normal) ease,box-shadow var(--motion-normal) ease}
+input:focus,select:focus{border-color:#9e785c;box-shadow:0 0 0 3px #a9826020}
+.vina-toast.is-visible{animation:vina-toast-in var(--motion-slow) var(--motion-ease)}
+@keyframes vina-toast-in{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@media(max-width:740px){dialog[open]{animation-name:vina-dialog-mobile}@keyframes vina-dialog-mobile{from{opacity:0;transform:translate3d(0,24px,0)}to{opacity:1;transform:translate3d(0,0,0)}}}
+@media(prefers-reduced-motion:reduce){#content.vina-content-entering,dialog[open],dialog::backdrop,.vina-toast.is-visible{animation:none!important}.button,.ghost,nav button,input,select{transition:none!important}}
