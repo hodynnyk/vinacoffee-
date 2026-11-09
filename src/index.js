@@ -76,6 +76,39 @@ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недост�
 const rows=await env.DB.prepare('SELECT shifts.id,employees.display_name,shifts.opened_at,shifts.closed_at,shifts.close_reason FROM shifts JOIN employees ON employees.id=shifts.employee_id ORDER BY shifts.opened_at DESC LIMIT 100').all();return reply({shifts:rows.results})}
 }
 // Daily checklist: owner manages templates; staff completes each item once per Kyiv date.
+if(path.startsWith('/api/operations')){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS operations (id TEXT PRIMARY KEY, kind TEXT NOT NULL CHECK(kind IN ('event','announcement')), title TEXT NOT NULL, details TEXT NOT NULL DEFAULT '', publish_at TEXT NOT NULL, event_at TEXT, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)").run();
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS operation_ack (operation_id TEXT NOT NULL, employee_id TEXT NOT NULL, acknowledged_at TEXT NOT NULL, PRIMARY KEY(operation_id,employee_id))").run();
+ const isAdmin=user.role==='owner'||user.role==='manager';
+ if(path==='/api/operations'&&request.method==='GET'){
+  const rows=await env.DB.prepare("SELECT o.*,a.acknowledged_at FROM operations o LEFT JOIN operation_ack a ON a.operation_id=o.id AND a.employee_id=? WHERE (?=1 OR (o.active=1 AND o.publish_at<=?)) ORDER BY o.publish_at DESC LIMIT 100").bind(user.id,isAdmin?1:0,new Date().toISOString()).all();
+  return reply({items:rows.results});
+ }
+ if(path==='/api/operations'&&request.method==='POST'){
+  if(!isAdmin)return reply({error:'Недостатньо прав'},403);
+  const v=await body(request);
+  if(!['event','announcement'].includes(v.kind)||typeof v.title!=='string'||v.title.trim().length<3||v.title.length>120||typeof v.details!=='string'||v.details.length>2000||typeof v.publishAt!=='string'||!Number.isFinite(Date.parse(v.publishAt))||v.eventAt&&(!Number.isFinite(Date.parse(v.eventAt))))return reply({error:'Перевірте дані події'},400);
+  const id=crypto.randomUUID();
+  await env.DB.prepare('INSERT INTO operations(id,kind,title,details,publish_at,event_at,created_at) VALUES(?,?,?,?,?,?,?)').bind(id,v.kind,v.title.trim(),v.details.trim(),new Date(v.publishAt).toISOString(),v.eventAt?new Date(v.eventAt).toISOString():null,new Date().toISOString()).run();
+  await audit(env,user.id,'operation.created','operation',id);return reply({ok:true,id},201);
+ }
+ const match=path.match(/^\/api\/operations\/([a-f0-9-]{36})$/);
+ if(match&&request.method==='PATCH'){
+  if(!isAdmin)return reply({error:'Недостатньо прав'},403);
+  const v=await body(request);
+  if(!['event','announcement'].includes(v.kind)||typeof v.title!=='string'||v.title.trim().length<3||v.title.length>120||typeof v.details!=='string'||v.details.length>2000||typeof v.publishAt!=='string'||!Number.isFinite(Date.parse(v.publishAt))||v.eventAt&&!Number.isFinite(Date.parse(v.eventAt))||typeof v.active!=='boolean')return reply({error:'Перевірте дані'},400);
+  const result=await env.DB.prepare('UPDATE operations SET kind=?,title=?,details=?,publish_at=?,event_at=?,active=? WHERE id=?').bind(v.kind,v.title.trim(),v.details.trim(),new Date(v.publishAt).toISOString(),v.eventAt?new Date(v.eventAt).toISOString():null,v.active?1:0,match[1]).run();
+  if(!result.meta.changes)return reply({error:'Не знайдено'},404);
+  await audit(env,user.id,'operation.updated','operation',match[1]);return reply({ok:true});
+ }
+ const ack=path.match(/^\/api\/operations\/([a-f0-9-]{36})\/ack$/);
+ if(ack&&request.method==='POST'){
+  const row=await env.DB.prepare('SELECT id FROM operations WHERE id=? AND active=1 AND publish_at<=?').bind(ack[1],new Date().toISOString()).first();
+  if(!row)return reply({error:'Подія ще недоступна'},404);
+  await env.DB.prepare('INSERT OR IGNORE INTO operation_ack(operation_id,employee_id,acknowledged_at) VALUES(?,?,?)').bind(ack[1],user.id,new Date().toISOString()).run();
+  return reply({ok:true});
+ }
+}
 if(path.startsWith('/api/tasks')){
 await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_templates (id TEXT PRIMARY KEY, title TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)").run();
 await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_completions (task_id TEXT NOT NULL REFERENCES task_templates(id), employee_id TEXT NOT NULL REFERENCES employees(id), work_date TEXT NOT NULL, completed_at TEXT NOT NULL, PRIMARY KEY(task_id,employee_id,work_date))").run();
