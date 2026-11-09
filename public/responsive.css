@@ -192,3 +192,10 @@ body[data-view="admin"] .vina-dc-metric-mark{font:600 10px/1.2 system-ui,sans-se
 body[data-view="admin"] .vina-mobile-nav button>span{height:18px}
 body[data-view="admin"] .vina-mobile-nav button .vina-nav-icon{width:17px;height:17px}
 }
+
+/* Staff operational controls: visible refresh without distracting from shift action */
+.vina-staff-history .vina-staff-section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.vina-staff-refresh{border:1px solid var(--vina-border,#e4d9cd);background:var(--vina-panel,#fffdf9);color:var(--vina-ink,#332920);border-radius:13px;padding:10px 15px;min-height:42px;font:600 12px/1.2 inherit;cursor:pointer}
+.vina-staff-refresh:disabled{opacity:.55;cursor:wait}
+.vina-staff-refresh:focus-visible,.vina-staff-shift-action button:focus-visible{outline:3px solid var(--vina-accent,#a47f60);outline-offset:3px}
+@media(max-width:740px){.vina-staff-history .vina-staff-section-title{align-items:center}.vina-staff-refresh{min-height:40px;padding:9px 12px}}
