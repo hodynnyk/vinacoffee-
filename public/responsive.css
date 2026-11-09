@@ -199,3 +199,22 @@ body[data-view="admin"] .vina-mobile-nav button .vina-nav-icon{width:17px;height
 .vina-staff-refresh:disabled{opacity:.55;cursor:wait}
 .vina-staff-refresh:focus-visible,.vina-staff-shift-action button:focus-visible{outline:3px solid var(--vina-accent,#a47f60);outline-offset:3px}
 @media(max-width:740px){.vina-staff-history .vina-staff-section-title{align-items:center}.vina-staff-refresh{min-height:40px;padding:9px 12px}}
+
+/* Landscape touch viewport: use a single layout model, never half-desktop sidebar. */
+@media (orientation:landscape) and (pointer:coarse) and (max-height:520px){
+body[data-view="admin"] .shell{display:block!important;grid-template-columns:none!important;min-height:100dvh!important}
+body[data-view="admin"] .shell>.sidebar{display:none!important}
+body[data-view="admin"] .shell>main{position:relative!important;display:block!important;grid-column:auto!important;grid-row:auto!important;float:none!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:15px max(20px,env(safe-area-inset-right,0px)) 85px max(20px,env(safe-area-inset-left,0px))!important;box-sizing:border-box!important}
+body[data-view="admin"] main>header{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)!important;align-items:center!important;gap:16px!important;padding:0 0 12px!important;margin:0 0 12px!important}
+body[data-view="admin"] main>header .header-right{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;max-width:none!important;width:100%!important}
+body[data-view="admin"] main>header .header-right button,body[data-view="admin"] main>header .header-right .vina-theme-toggle{position:static!important;min-width:0!important;width:100%!important;height:auto!important;min-height:36px!important;padding:7px 5px!important;margin:0!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:11px!important;line-height:1.2!important}
+body[data-view="admin"] .vina-dc-masthead{display:none!important}
+body[data-view="admin"] .vina-dc-intro{padding:16px 0 20px!important}
+body[data-view="admin"] .vina-dc-intro h2{font-size:clamp(38px,6vw,53px)!important}
+body[data-view="admin"] .vina-dc-metrics{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+body[data-view="admin"] .vina-dc-metrics .card{min-width:0!important;overflow:hidden!important;border-radius:21px!important}
+body[data-view="admin"] .vina-dc-metrics .muted{font-size:12px!important;line-height:1.35!important;letter-spacing:0!important;overflow-wrap:anywhere!important}
+body[data-view="admin"] .vina-dc-metric-mark{position:static!important;display:block!important;margin-top:10px!important}
+body[data-view="admin"] #vina-mobile-nav{display:flex!important;position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:70!important}
+body[data-view="admin"] #vina-mobile-menu:not([hidden]){z-index:71!important}
+}
