@@ -41,6 +41,7 @@ return reply({ok:true,user:{name:employee.display_name,role:employee.role}},200,
 const user=await session(request,env);if(!user)return reply({error:'Потрібна авторизація'},401);
 if(path==='/api/auth/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role}});
 if(path==='/api/auth/logout'&&request.method==='POST'){await env.DB.prepare("UPDATE sessions SET revoked_at=? WHERE id_hash=?").bind(new Date().toISOString(),await sha(cookie(request))).run();return reply({ok:true},200,{'set-cookie':sessionCookie('',0)})}
+if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:false,bonuses:false,tasks:false,stockReports:false}});
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 if(path==='/api/staff'&&request.method==='GET'){const result=await env.DB.prepare('SELECT id,display_name,role,rank,active,created_at FROM employees ORDER BY created_at DESC LIMIT 100').all();return reply({staff:result.results})}
 if(path==='/api/audit'&&request.method==='GET'){await env.DB.prepare('CREATE TABLE IF NOT EXISTS audit_events (id TEXT PRIMARY KEY, actor_id TEXT, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT, details_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)').run();const result=await env.DB.prepare('SELECT action,entity_type,created_at FROM audit_events ORDER BY created_at DESC LIMIT 40').all();return reply({events:result.results})}
