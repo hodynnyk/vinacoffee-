@@ -182,3 +182,56 @@ body[data-view="staff"] .staff-tool-number{width:38px;height:38px}
 body[data-view="staff"] .staff-tool-badge{font-size:9px;padding:7px}
 }
 @media(max-width:370px){body[data-view="staff"] .staff-tool-badge{display:none}body[data-view="staff"] .staff-welcome-mark{display:none}}
+
+/* VINA Data Centre · unified interface system */
+body[data-view="admin"]{background:#f8f6f2}
+body[data-view="admin"] main{max-width:1360px}
+body[data-view="admin"] header{border-bottom:0;padding-bottom:0;margin-bottom:25px}
+body[data-view="admin"] header h1{font-size:clamp(29px,3.2vw,40px);color:#35271f}
+body[data-view="admin"] .sidebar{background:#2e231e}
+body[data-view="admin"] .sidebar nav{gap:6px}
+body[data-view="admin"] .sidebar nav button{min-height:46px;border-radius:12px;padding:12px 15px;color:#e5d7cb;font-size:13px}
+body[data-view="admin"] .sidebar nav button.active{background:#73513d;color:#fff;border-color:transparent}
+body[data-view="admin"] .overview-hero{background:#382920;border-radius:24px;padding:34px 36px;box-shadow:none}
+body[data-view="admin"] .overview-hero h2{font-size:clamp(25px,3vw,36px);margin:12px 0 9px}
+body[data-view="admin"] .overview-hero .button{border-radius:12px;min-height:47px;font-weight:700}
+body[data-view="admin"] .overview-stats .card,body[data-view="admin"] .shift-summary .card{border:1px solid #eae0d5;border-radius:19px;background:#fffdfa;padding:25px;box-shadow:0 4px 24px #34261f07}
+body[data-view="admin"] .overview-stats .metric,body[data-view="admin"] .shift-summary .metric{font-size:clamp(35px,3.5vw,46px);margin:15px 0 8px;color:#3f2b20}
+body[data-view="admin"] .section-title{font-size:23px;color:#38291f}
+body[data-view="admin"] .overview-columns{gap:20px}
+body[data-view="admin"] .overview-columns .card{border-radius:19px;background:#fffdfa;box-shadow:none}
+body[data-view="admin"] .overview-person{padding:17px 0}
+body[data-view="admin"] .overview-avatar{background:#f1e8de;border-radius:12px}
+body[data-view="admin"] .overview-actions{gap:10px}
+body[data-view="admin"] .overview-actions .ghost{min-height:49px;padding:12px 18px;background:#fffdfa;border-color:#e8ddd1;border-radius:13px}
+body[data-view="admin"] .ghost{border-radius:12px}
+body[data-view="admin"] .button{border-radius:12px}
+body[data-view="admin"] .toolbar{margin:15px 0 20px}
+body[data-view="admin"] .table-wrap{border-radius:16px;box-shadow:none}
+body[data-view="admin"] th{background:#f7f0e8}
+body[data-view="admin"] td{background:#fffdfa}
+body[data-view="admin"] .tag{font-weight:700}
+@media(max-width:740px){
+body[data-view="admin"] .sidebar{padding:18px 16px 15px}
+body[data-view="admin"] .sidebar .logo{margin-bottom:13px}
+body[data-view="admin"] .sidebar nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;overflow:visible;padding:0;margin-top:12px}
+body[data-view="admin"] .sidebar nav button{width:100%;min-width:0;min-height:42px;padding:9px 5px;font-size:11px;text-align:center;justify-content:center;white-space:normal;line-height:1.25;border-radius:10px}
+body[data-view="admin"] main{padding:24px 16px 55px}
+body[data-view="admin"] header{margin-bottom:21px}
+body[data-view="admin"] header .header-right{display:flex;gap:8px}
+body[data-view="admin"] header .header-right .ghost{min-height:40px;font-size:12px}
+body[data-view="admin"] .overview-hero{padding:25px 22px;border-radius:20px}
+body[data-view="admin"] .overview-hero h2{font-size:27px}
+body[data-view="admin"] .overview-hero .button{align-self:stretch}
+body[data-view="admin"] .overview-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+body[data-view="admin"] .overview-stats .card{padding:17px;border-radius:16px}
+body[data-view="admin"] .overview-stats .card:last-child{grid-column:1/-1}
+body[data-view="admin"] .overview-stats .metric{font-size:34px;margin:10px 0 6px}
+body[data-view="admin"] .overview-stats .muted{font-size:12px}
+body[data-view="admin"] .overview-stats p{font-size:12px}
+body[data-view="admin"] .overview-columns .section-title{font-size:21px}
+body[data-view="admin"] .overview-actions{display:grid;grid-template-columns:1fr 1fr}
+body[data-view="admin"] .overview-actions .ghost{font-size:12px;min-width:0;padding:12px 9px}
+body[data-view="admin"] .shift-summary .card{padding:17px}
+body[data-view="admin"] .shift-summary .metric{font-size:32px}
+}
