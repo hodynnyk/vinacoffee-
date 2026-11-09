@@ -42,7 +42,7 @@ const user=await session(request,env);if(!user)return reply({error:'Потріб
 if(path==='/api/auth/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role}});
 if(path==='/api/auth/change-password'&&request.method==='POST'){
 const input=await body(request);
-if(typeof input.currentPassword!=='string'||typeof input.newPassword!=='string'||input.newPassword.length<8||input.newPassword.length>256||input.currentPassword===input.newPassword)return reply({error:'Новий пароль має містити від 8 символів і відрізнятися від старого'},400);
+if(typeof input.currentPassword!=='string'||typeof input.newPassword!=='string'||input.newPassword.length<(user.role==='barista'?4:8)||input.newPassword.length>256||input.currentPassword===input.newPassword)return reply({error:'Пароль бариста — від 4 символів, власника й менеджера — від 8; новий має відрізнятися від старого'},400);
 const record=await env.DB.prepare('SELECT password_hash FROM employees WHERE id=?').bind(user.id).first();
 if(!record||!await checkPassword(input.currentPassword,record.password_hash))return reply({error:'Поточний пароль неправильний'},403);
 const hash=await passwordHash(input.newPassword);
@@ -58,7 +58,7 @@ if(path==='/api/audit'&&request.method==='GET'){await env.DB.prepare('CREATE TAB
 if(path==='/api/staff'&&request.method==='POST'){
 if(user.role!=='owner')return reply({error:'Лише власник може створювати працівників'},403);
 const input=await body(request);
-if(typeof input.name!=='string'||typeof input.password!=='string'||!['barista','manager'].includes(input.role)||input.name.trim().length<2||input.name.trim().length>80||input.password.length<8||input.password.length>256)return reply({error:'Перевірте ім’я, роль і пароль (від 8 символів)'},400);
+if(typeof input.name!=='string'||typeof input.password!=='string'||!['barista','manager'].includes(input.role)||input.name.trim().length<2||input.name.trim().length>80||input.password.length<(input.role==='barista'?4:8)||input.password.length>256)return reply({error:'Пароль бариста — від 4 символів, менеджера — від 8'},400);
 const exists=await env.DB.prepare('SELECT id FROM employees WHERE display_name=? LIMIT 1').bind(input.name.trim()).first();if(exists)return reply({error:'Працівник з таким ім’ям уже існує'},409);
 const id=crypto.randomUUID(),hash=await passwordHash(input.password);
 await env.DB.prepare('INSERT INTO employees(id,display_name,role,password_hash) VALUES(?,?,?,?)').bind(id,input.name.trim(),input.role,hash).run();
