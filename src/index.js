@@ -91,6 +91,16 @@ if(path==='/api/tasks'&&request.method==='POST'){
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 const input=await body(request);if(typeof input.title!=='string'||input.title.trim().length<3||input.title.trim().length>120)return reply({error:'Назва завдання має містити від 3 до 120 символів'},400);
 const id=crypto.randomUUID();await env.DB.prepare('INSERT INTO task_templates(id,title,created_at) VALUES(?,?,?)').bind(id,input.title.trim(),new Date().toISOString()).run();await audit(env,user.id,'task.created','task',id);return reply({ok:true,id},201)}
+const edit=path.match(/^\/api\/tasks\/([a-f0-9-]{36})$/);
+if(edit&&request.method==='PATCH'){
+ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+ const input=await body(request);
+ if(typeof input.title!=='string'||input.title.trim().length<3||input.title.trim().length>120)return reply({error:'Назва завдання має містити від 3 до 120 символів'},400);
+ const result=await env.DB.prepare('UPDATE task_templates SET title=? WHERE id=?').bind(input.title.trim(),edit[1]).run();
+ if(!result.meta.changes)return reply({error:'Завдання не знайдено'},404);
+ await audit(env,user.id,'task.edited','task',edit[1]);
+ return reply({ok:true});
+}
 const completion=path.match(/^\/api\/tasks\/([a-f0-9-]{36})\/complete$/);
 if(completion&&request.method==='POST'){
 const task=await env.DB.prepare('SELECT id FROM task_templates WHERE id=? AND active=1').bind(completion[1]).first();if(!task)return reply({error:'Завдання не знайдено'},404);
