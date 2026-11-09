@@ -1,5 +1,11 @@
 const $=s=>document.querySelector(s);const splash=$('#vina-splash');let splashDone=false;function hideSplash(){if(splashDone||!splash)return;splashDone=true;splash.classList.add('is-hidden');splash.setAttribute('aria-hidden','true');setTimeout(()=>splash.remove(),650)}setTimeout(hideSplash,4500);
 const content=$('#content'),notice=$('#notice');
+/* VINA appearance preference: explicit choice overrides OS; no account data stored */
+const VINA_THEME_KEY='vina-appearance';
+function applyVinaTheme(theme){const selected=theme==='dark'?'dark':'light';document.documentElement.dataset.theme=selected;document.documentElement.style.colorScheme=selected;const toggle=document.querySelector('#vina-theme-toggle');if(toggle){toggle.textContent=selected==='dark'?'☀ Світла':'☾ Темна';toggle.setAttribute('aria-label',selected==='dark'?'Увімкнути світлу тему':'Увімкнути темну тему');toggle.setAttribute('aria-pressed',String(selected==='dark'))}}
+function initVinaTheme(){let saved;try{saved=localStorage.getItem(VINA_THEME_KEY)}catch{}applyVinaTheme(saved==='dark'||saved==='light'?saved:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));let toggle=document.querySelector('#vina-theme-toggle');if(!toggle){toggle=document.createElement('button');toggle.id='vina-theme-toggle';toggle.type='button';toggle.className='vina-theme-toggle';document.body.append(toggle)}applyVinaTheme(document.documentElement.dataset.theme);toggle.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem(VINA_THEME_KEY,next)}catch{}applyVinaTheme(next)})}
+initVinaTheme();
+
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 async function api(path,options={}){const r=await fetch('/api/'+path,{credentials:'same-origin',...options,headers:{...(options.body?{'content-type':'application/json'}:{}),...options.headers}});let data;try{data=await r.json()}catch{throw Error('Сервер не відповів коректно')}if(!r.ok)throw Error(data.error||'Помилка сервера');return data}
 const post=(path,data)=>api(path,{method:'POST',body:JSON.stringify(data)});
