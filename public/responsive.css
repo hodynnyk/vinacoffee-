@@ -644,3 +644,36 @@ body[data-view="staff"] .vina-staff-return[hidden]{display:none!important}
 .vina-compare-row span{font-size:13px;opacity:.75}
 .vina-compare-row strong{text-align:center;overflow-wrap:anywhere}
 @media(max-width:560px){.vina-shift-metrics{grid-template-columns:1fr 1fr}.vina-shift-inspection{padding:15px}.vina-compare-row{font-size:12px;gap:6px}}
+
+/* Shared VINA schedule, staff requests and approvals */
+.vina-roster-page{display:grid;gap:22px;min-width:0}
+.vina-roster-page .vina-shift-head{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
+.vina-roster-page h2{font-size:clamp(25px,4vw,38px);margin:6px 0}
+.vina-roster-page input,.vina-roster-page select,.vina-roster-page textarea{font:inherit;min-width:0;max-width:100%;box-sizing:border-box;border-radius:11px;border:1px solid var(--vina-border,#cbb8a6);background:var(--vina-panel,#fff);color:inherit;padding:10px}
+.vina-roster-form{display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding:18px}
+.vina-roster-form label{display:grid;gap:7px;flex:1 1 160px;font-size:13px}
+.vina-roster-form button{min-height:44px}
+.vina-roster-calendar{border:1px solid var(--vina-border,#d8c5b4);border-radius:18px;overflow:hidden;background:var(--vina-panel,#fff)}
+.vina-roster-weekdays,.vina-roster-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.vina-roster-weekdays span{text-align:center;padding:12px 2px;font-weight:700;font-size:12px;opacity:.7}
+.vina-roster-day,.vina-roster-blank{min-height:112px;min-width:0;padding:9px;border-top:1px solid var(--vina-border,#e2d4c6);border-right:1px solid var(--vina-border,#e2d4c6)}
+.vina-roster-date{font-size:12px;font-weight:700;display:block;margin-bottom:7px;opacity:.7}
+.vina-roster-entry{position:relative;padding:8px 18px 8px 7px;border-radius:8px;background:#b58d6524;margin-bottom:5px;font-size:11px;overflow-wrap:anywhere}
+.vina-roster-entry strong,.vina-roster-entry small{display:block}
+.vina-roster-entry small{opacity:.7;margin-top:3px}
+.vina-roster-entry button{position:absolute;top:0;right:0;border:0;background:transparent;color:inherit;font-size:17px;cursor:pointer}
+.vina-roster-absence{display:block;font-size:11px;padding:5px;border-radius:8px;background:#82a98a2b;margin-bottom:5px;overflow-wrap:anywhere}
+.vina-roster-requests{padding:20px}
+.vina-roster-requests h3{margin-top:0}
+.vina-leave-balances{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.vina-leave-balances>div{padding:15px;border-radius:13px;background:#b58d6519}
+.vina-leave-balances small,.vina-leave-balances strong{display:block}
+.vina-leave-balances small{font-size:11px;opacity:.7}
+.vina-leave-balances strong{font-size:23px;margin:6px 0}
+.vina-leave-list{display:grid;gap:10px;margin-top:18px}
+.vina-leave-item{padding:14px;border-radius:13px;border:1px solid var(--vina-border,#d8c5b4);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.vina-leave-item strong,.vina-leave-item small{display:block}
+.vina-leave-item small{opacity:.65;margin:5px 0}
+.vina-leave-item p{margin:7px 0}
+.vina-leave-actions{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:700px){.vina-roster-day,.vina-roster-blank{min-height:72px;padding:4px}.vina-roster-weekdays span{font-size:10px}.vina-roster-entry{font-size:9px;padding:4px 11px 4px 3px}.vina-roster-entry small{font-size:9px}.vina-roster-date{font-size:11px}.vina-roster-absence{font-size:9px;padding:3px}.vina-leave-balances{gap:5px}.vina-leave-balances>div{padding:8px}.vina-leave-balances strong{font-size:17px}.vina-roster-requests{padding:12px}}
