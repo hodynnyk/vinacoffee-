@@ -113,6 +113,12 @@ if(path.startsWith('/api/inventory')){
   const rows=await env.DB.prepare('SELECT id,name,quantity,unit,critical,updated_at FROM inventory_items ORDER BY critical DESC,name LIMIT 200').all();
   return reply({items:rows.results});
  }
+ if(path==='/api/inventory/alerts'&&request.method==='GET'){
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_requests (id TEXT PRIMARY KEY, employee_id TEXT NOT NULL, item_name TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','resolved')), created_at TEXT NOT NULL, resolved_at TEXT)").run();
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_request_details (request_id TEXT PRIMARY KEY, item_id TEXT NOT NULL, stock_state TEXT NOT NULL CHECK(stock_state IN ('empty','low')))").run();
+  const result=await env.DB.prepare("SELECT r.id,r.item_name,r.created_at,COALESCE(d.stock_state,'empty') AS stock_state FROM supply_requests r LEFT JOIN supply_request_details d ON d.request_id=r.id WHERE r.status='new' ORDER BY r.created_at DESC LIMIT 20").all();
+  return reply({alerts:result.results});
+ }
  if(path==='/api/inventory'&&request.method==='POST'){
   const input=await body(request);
   if(typeof input.name!=='string'||input.name.trim().length<2||input.name.trim().length>100||typeof input.quantity!=='number'||!Number.isFinite(input.quantity)||input.quantity<0||input.quantity>1000000||typeof input.unit!=='string'||input.unit.trim().length<1||input.unit.length>20||typeof input.critical!=='boolean')return reply({error:'Перевірте назву, кількість, одиницю та важливість'},400);
@@ -122,6 +128,15 @@ if(path.startsWith('/api/inventory')){
   return reply({ok:true,id},201);
  }
  const match=path.match(/^\/api\/inventory\/([a-f0-9-]{36})$/);
+ if(match&&request.method==='PATCH'){
+  const input=await body(request);
+  if(typeof input.name!=='string'||input.name.trim().length<2||input.name.trim().length>100||typeof input.quantity!=='number'||!Number.isFinite(input.quantity)||input.quantity<0||input.quantity>1000000||typeof input.unit!=='string'||!input.unit.trim()||input.unit.length>20||typeof input.critical!=='boolean')return reply({error:'Перевірте дані товару'},400);
+  const duplicate=await env.DB.prepare('SELECT id FROM inventory_items WHERE name=? COLLATE NOCASE AND id<>?').bind(input.name.trim(),match[1]).first();
+  if(duplicate)return reply({error:'Товар з такою назвою вже існує'},409);
+  const result=await env.DB.prepare('UPDATE inventory_items SET name=?,quantity=?,unit=?,critical=?,updated_at=? WHERE id=?').bind(input.name.trim(),input.quantity,input.unit.trim(),input.critical?1:0,new Date().toISOString(),match[1]).run();
+  if(!result.meta.changes)return reply({error:'Товар не знайдено'},404);
+  await audit(env,user.id,'inventory.edited','inventory',match[1]);return reply({ok:true});
+ }
  if(match&&request.method==='POST'){
   const input=await body(request);
   if(typeof input.quantity!=='number'||!Number.isFinite(input.quantity)||input.quantity<0||input.quantity>1000000)return reply({error:'Невірна кількість'},400);
@@ -132,25 +147,28 @@ if(path.startsWith('/api/inventory')){
 }
 // Supply requests do not expose inventory balances to staff.
 if(path.startsWith('/api/supply-requests')){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_request_details (request_id TEXT PRIMARY KEY, item_id TEXT NOT NULL, stock_state TEXT NOT NULL CHECK(stock_state IN ('empty','low')))").run();
+
  await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE COLLATE NOCASE, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity>=0), unit TEXT NOT NULL DEFAULT 'шт', critical INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
  await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_requests (id TEXT PRIMARY KEY, employee_id TEXT NOT NULL, item_name TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','resolved')), created_at TEXT NOT NULL, resolved_at TEXT)").run();
  if(path==='/api/supply-requests'&&request.method==='POST'){
   const input=await body(request);
-  if(typeof input.itemId!=='string'||!/^[a-f0-9-]{36}$/.test(input.itemId)||typeof input.note!=='string'||input.note.length>300)return reply({error:'Оберіть товар зі складу; примітка — до 300 символів'},400);
+  if(!['empty','low'].includes(input.stockState)||typeof input.itemId!=='string'||!/^[a-f0-9-]{36}$/.test(input.itemId)||typeof input.note!=='string'||input.note.length>300)return reply({error:'Оберіть товар зі складу; примітка — до 300 символів'},400);
   const item=await env.DB.prepare('SELECT id,name FROM inventory_items WHERE id=?').bind(input.itemId).first();
   if(!item)return reply({error:'Товар не знайдено у складі'},404);
   const id=crypto.randomUUID(),now=new Date().toISOString();
   await env.DB.batch([
-   env.DB.prepare('UPDATE inventory_items SET quantity=0,updated_at=? WHERE id=?').bind(now,item.id),
-   env.DB.prepare('INSERT INTO supply_requests(id,employee_id,item_name,note,created_at) VALUES(?,?,?,?,?)').bind(id,user.id,item.name,input.note.trim(),now)
+   ...(input.stockState==='empty'?[env.DB.prepare('UPDATE inventory_items SET quantity=0,updated_at=? WHERE id=?').bind(now,item.id)]:[]),
+   env.DB.prepare('INSERT INTO supply_requests(id,employee_id,item_name,note,created_at) VALUES(?,?,?,?,?)').bind(id,user.id,item.name,input.note.trim(),now),
+   env.DB.prepare('INSERT INTO supply_request_details(request_id,item_id,stock_state) VALUES(?,?,?)').bind(id,item.id,input.stockState)
   ]);
-  await audit(env,user.id,'inventory.reported_empty','inventory',item.id);
+  if(input.stockState==='empty')await audit(env,user.id,'inventory.reported_empty','inventory',item.id);
   await audit(env,user.id,'supply.requested','supply_request',id);
-  return reply({ok:true,id,itemId:item.id},201);
+  return reply({ok:true,id,itemId:item.id,stockState:input.stockState},201);
  }
  if(path==='/api/supply-requests'&&request.method==='GET'){
   if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
-  const rows=await env.DB.prepare("SELECT r.id,r.item_name,r.note,r.status,r.created_at,r.resolved_at,e.display_name FROM supply_requests r JOIN employees e ON e.id=r.employee_id ORDER BY CASE r.status WHEN 'new' THEN 0 ELSE 1 END,r.created_at DESC LIMIT 150").all();
+  const rows=await env.DB.prepare("SELECT r.id,r.item_name,r.note,r.status,r.created_at,r.resolved_at,e.display_name,COALESCE(d.stock_state,'empty') AS stock_state FROM supply_requests r JOIN employees e ON e.id=r.employee_id LEFT JOIN supply_request_details d ON d.request_id=r.id ORDER BY CASE r.status WHEN 'new' THEN 0 ELSE 1 END,r.created_at DESC LIMIT 150").all();
   return reply({requests:rows.results});
  }
  const match=path.match(/^\/api\/supply-requests\/([a-f0-9-]{36})\/resolve$/);
