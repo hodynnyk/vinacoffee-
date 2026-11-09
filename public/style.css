@@ -333,3 +333,15 @@ body[data-view="admin"] .sidebar nav::-webkit-scrollbar{display:none}
 .auth-card input:focus-visible{outline:2px solid #bb9476;outline-offset:2px}
 .vina-confirm .button:focus-visible,.vina-confirm .ghost:focus-visible{outline-offset:4px}
 @media(prefers-reduced-motion:reduce){.vina-pending::before{animation:none;border-right-color:currentColor}}
+
+/* VINA Motion · performance and accessibility audit */
+@media(hover:none){.click:hover,.button:hover,.ghost:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){
+html:focus-within{scroll-behavior:auto}
+.vina-splash,.vina-toast,.vina-content-entering,dialog[open],dialog::backdrop{transition:none!important;animation:none!important}
+.vina-splash-line span,.vina-skeleton-avatar,.vina-skeleton-line,.vina-skeleton-metric,.vina-pending::before{animation:none!important}
+}
+@media(max-width:740px){
+input,select,textarea{font-size:16px}
+.vina-toast{bottom:max(18px,env(safe-area-inset-bottom,0px))}
+}
