@@ -244,3 +244,13 @@ body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:none!important}
 @media(max-width:740px){
 body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:block!important;position:fixed!important;z-index:1000!important;left:12px!important;right:12px!important;bottom:calc(66px + env(safe-area-inset-bottom,0px))!important;max-height:calc(100dvh - 110px)!important;overflow-y:auto!important;background:var(--vina-panel)!important;color:var(--vina-ink)!important;border:1px solid var(--vina-border)!important;border-radius:19px!important;box-shadow:0 15px 45px #1c191733!important}
 }
+
+/* Staff checklist — accessible, compact, warm surface. */
+.vina-task-list{display:grid;gap:9px}
+.vina-task-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border:1px solid var(--vina-border,#e4d9cd);border-radius:17px;background:var(--vina-panel,#fffdf9)}
+.vina-task-row>div{display:grid;gap:5px;min-width:0}
+.vina-task-row strong{font-size:14px;color:var(--vina-ink,#332920);overflow-wrap:anywhere}
+.vina-task-row small{font-size:12px;color:var(--vina-secondary,#79695d)}
+.vina-task-row button{flex-shrink:0;min-height:39px;border-radius:12px}
+.vina-task-row button:disabled{opacity:.65;cursor:default}
+@media(max-width:480px){.vina-task-row{align-items:flex-start;flex-direction:column}.vina-task-row button{width:100%}}
