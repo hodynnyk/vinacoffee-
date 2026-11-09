@@ -670,3 +670,45 @@ body[data-view="admin"] .vina-mobile-menu>button[aria-current="page"]{color:#8a6
 body[data-view="admin"] main{padding-bottom:36px}
 }
 @media(min-width:741px){.vina-mobile-nav,.vina-mobile-menu{display:none!important}}
+
+/* VINA Soft Luxury + parallel night palette */
+:root{--vina-radius-card:22px;--vina-radius-action:15px}
+body[data-view="admin"] .card,body[data-view="staff"] .card,.vina-staff-feature,.vina-staff-shift,.vina-staff-history-panel,body[data-view="admin"] .vina-dc-metrics .card,body[data-view="admin"] .vina-dc-columns .card,body[data-view="admin"] .vina-dc-actions .ghost{border-radius:var(--vina-radius-card)!important}
+body[data-view="admin"] .ghost,body[data-view="admin"] .button,body[data-view="staff"] .button,.vina-staff-shift-action .button,.vina-auth-form-wrap .button{border-radius:var(--vina-radius-action)!important}
+.vina-staff-hero,.vina-centre-hero,.vina-auth-story{border-radius:26px!important}
+.vina-dc-monogram{border-radius:14px}
+body[data-view="admin"] .vina-mobile-nav button,body[data-view="admin"] .vina-mobile-menu:not([hidden]){border-radius:17px}
+.vina-theme-toggle{position:fixed;top:12px;right:13px;z-index:1100;border:1px solid #d8c9b9;border-radius:999px;background:#fffaf3;color:#483629;padding:9px 13px;min-height:38px;font-size:11px;font-weight:700;box-shadow:0 6px 22px #26180e12;cursor:pointer}
+@media(min-width:741px){.vina-theme-toggle{top:auto;bottom:17px;right:18px}}
+@media(max-width:740px){body[data-view="admin"] .vina-theme-toggle{top:11px;right:12px;font-size:10px;padding:8px 11px}body[data-view="admin"] .sidebar .logo{padding-right:90px}}
+html[data-theme="dark"]{--coffee:#e7d3bf;--latte:#cba785;--cream:#241d19;--line:#4c3c32;--muted:#b6a08d;background:#171411}
+html[data-theme="dark"] body,html[data-theme="dark"] body[data-view="admin"],html[data-theme="dark"] body[data-view="staff"],html[data-theme="dark"] body[data-view="auth"]{background:#171411!important;color:#f0e5d9}
+html[data-theme="dark"] main,html[data-theme="dark"] .shell{color:#f0e5d9}
+html[data-theme="dark"] p,html[data-theme="dark"] .muted,html[data-theme="dark"] .overview-person-info span{color:#baa99a}
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3,html[data-theme="dark"] .section-title,html[data-theme="dark"] .vina-dc,html[data-theme="dark"] .vina-dc-intro h2,html[data-theme="dark"] .vina-staff-section-title h2,html[data-theme="dark"] .vina-staff-feature h3,html[data-theme="dark"] .vina-shift-row-info strong,html[data-theme="dark"] .vina-auth-title{color:#f0e5d9}
+html[data-theme="dark"] .card,html[data-theme="dark"] body[data-view="admin"] .card,html[data-theme="dark"] .vina-staff-shift,html[data-theme="dark"] .vina-staff-feature,html[data-theme="dark"] .vina-staff-history-panel,html[data-theme="dark"] .vina-auth-panel,html[data-theme="dark"] .vina-auth-layout,html[data-theme="dark"] body[data-view="admin"] .vina-dc-metrics .card,html[data-theme="dark"] body[data-view="admin"] .vina-dc-columns .card,html[data-theme="dark"] body[data-view="admin"] .vina-dc-actions .ghost{background:#29221d!important;border-color:#483a30!important;color:#f0e5d9;box-shadow:none}
+html[data-theme="dark"] body[data-view="admin"] .metric,html[data-theme="dark"] body[data-view="admin"] .vina-dc-metrics .metric,html[data-theme="dark"] .vina-staff-status,html[data-theme="dark"] .vina-shift-indicator{color:#f5e8db}
+html[data-theme="dark"] .vina-dc-divider,html[data-theme="dark"] .vina-dc-masthead,html[data-theme="dark"] .vina-dc-endnote,html[data-theme="dark"] .vina-staff-footer,html[data-theme="dark"] .vina-shift-row{border-color:#4b3b30}
+html[data-theme="dark"] .vina-dc-text-link,html[data-theme="dark"] .vina-dc-brand strong{color:#e1c5a8}
+html[data-theme="dark"] .ghost,html[data-theme="dark"] body[data-view="admin"] .ghost,html[data-theme="dark"] .vina-theme-toggle{background:#302720!important;color:#f0e5d9!important;border-color:#5b4739!important}
+html[data-theme="dark"] .button,html[data-theme="dark"] body[data-view="admin"] .button,html[data-theme="dark"] .vina-staff-shift-action .button,html[data-theme="dark"] .vina-auth-form-wrap .button{background:#c9a583!important;color:#211914!important;border-color:#c9a583!important}
+html[data-theme="dark"] .vina-auth-form-wrap input,html[data-theme="dark"] input,html[data-theme="dark"] select{background:#302720;color:#f0e5d9;border-color:#6a5140}
+html[data-theme="dark"] .table-wrap,html[data-theme="dark"] dialog{background:#29221d;color:#f0e5d9;border-color:#4b3b30}
+html[data-theme="dark"] th{background:#382d25;color:#ddc0a3}
+html[data-theme="dark"] td{border-color:#4b3b30;color:#f0e5d9}
+html[data-theme="dark"] tbody tr:hover{background:#362b24}
+html[data-theme="dark"] .notice{background:#463321;color:#f0d9b7;border-color:#6d4e31}
+html[data-theme="dark"] .tag{background:#344333;color:#d0e6c7}
+html[data-theme="dark"] .tag.warn{background:#493723;color:#f1d1a2}
+html[data-theme="dark"] .tag.danger{background:#50302c;color:#f4c6bd}
+html[data-theme="dark"] body[data-view="admin"] .vina-mobile-nav,html[data-theme="dark"] body[data-view="admin"] .vina-mobile-menu:not([hidden]){background:#29221d;border-color:#4b3b30}
+html[data-theme="dark"] body[data-view="admin"] .vina-mobile-nav button{color:#bca38d}
+html[data-theme="dark"] body[data-view="admin"] .vina-mobile-nav button[aria-current="page"]{background:#4b382b;color:#f7e7d7}
+html[data-theme="dark"] body[data-view="admin"] .vina-mobile-menu>button[data-page]{color:#f0e5d9;border-color:#4b3b30}
+html[data-theme="dark"] .overview-avatar{background:#4b392d!important;color:#e7cdb1!important}
+html[data-theme="dark"] .vina-skeleton-row,html[data-theme="dark"] .vina-skeleton-line,html[data-theme="dark"] .vina-skeleton-avatar,html[data-theme="dark"] .vina-skeleton-metric{background-color:#493b31}
+html[data-theme="dark"] .vina-auth-story,html[data-theme="dark"] .vina-staff-hero{background:#201915}
+html[data-theme="dark"] .vina-auth-story h2,html[data-theme="dark"] .vina-staff-hero h2{color:#f9eee3}
+html[data-theme="dark"] .vina-auth-story p,html[data-theme="dark"] .vina-staff-hero p{color:#d4bcaa}
+html[data-theme="dark"] .vina-auth-panel-foot,html[data-theme="dark"] .vina-auth-panel-top{color:#c8aa8d;border-color:#4b3b30}
+html[data-theme="dark"] .vina-auth-footnote{color:#baa18d}
