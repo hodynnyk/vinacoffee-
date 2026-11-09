@@ -101,6 +101,31 @@ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недост�
 const input=await body(request);if(typeof input.active!=='boolean')return reply({error:'Невірний статус'},400);
 const result=await env.DB.prepare('UPDATE task_templates SET active=? WHERE id=?').bind(input.active?1:0,status[1]).run();if(!result.meta.changes)return reply({error:'Завдання не знайдено'},404);await audit(env,user.id,input.active?'task.enabled':'task.disabled','task',status[1]);return reply({ok:true})}
 }
+// Supply requests do not expose inventory balances to staff.
+if(path.startsWith('/api/supply-requests')){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_requests (id TEXT PRIMARY KEY, employee_id TEXT NOT NULL, item_name TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','resolved')), created_at TEXT NOT NULL, resolved_at TEXT)").run();
+ if(path==='/api/supply-requests'&&request.method==='POST'){
+  const input=await body(request);
+  if(typeof input.item!=='string'||input.item.trim().length<2||input.item.trim().length>100||typeof input.note!=='string'||input.note.length>300)return reply({error:'Назва товару: 2–100 символів, примітка: до 300'},400);
+  const id=crypto.randomUUID();
+  await env.DB.prepare('INSERT INTO supply_requests(id,employee_id,item_name,note,created_at) VALUES(?,?,?,?,?)').bind(id,user.id,input.item.trim(),input.note.trim(),new Date().toISOString()).run();
+  await audit(env,user.id,'supply.requested','supply_request',id);
+  return reply({ok:true,id},201);
+ }
+ if(path==='/api/supply-requests'&&request.method==='GET'){
+  if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+  const rows=await env.DB.prepare("SELECT r.id,r.item_name,r.note,r.status,r.created_at,r.resolved_at,e.display_name FROM supply_requests r JOIN employees e ON e.id=r.employee_id ORDER BY CASE r.status WHEN 'new' THEN 0 ELSE 1 END,r.created_at DESC LIMIT 150").all();
+  return reply({requests:rows.results});
+ }
+ const match=path.match(/^\/api\/supply-requests\/([a-f0-9-]{36})\/resolve$/);
+ if(match&&request.method==='POST'){
+  if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+  const result=await env.DB.prepare("UPDATE supply_requests SET status='resolved',resolved_at=? WHERE id=? AND status='new'").bind(new Date().toISOString(),match[1]).run();
+  if(!result.meta.changes)return reply({error:'Заявку не знайдено або вже опрацьовано'},404);
+  await audit(env,user.id,'supply.resolved','supply_request',match[1]);
+  return reply({ok:true});
+ }
+}
 if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:true,bonuses:false,tasks:true,stockReports:false}});
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 if(path==='/api/staff'&&request.method==='GET'){const result=await env.DB.prepare('SELECT id,display_name,role,rank,active,created_at FROM employees ORDER BY created_at DESC LIMIT 100').all();return reply({staff:result.results})}
