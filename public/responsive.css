@@ -254,3 +254,16 @@ body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:block!important;
 .vina-task-row button{flex-shrink:0;min-height:39px;border-radius:12px}
 .vina-task-row button:disabled{opacity:.65;cursor:default}
 @media(max-width:480px){.vina-task-row{align-items:flex-start;flex-direction:column}.vina-task-row button{width:100%}}
+
+/* Owner task management */
+.vina-tasks-admin .toolbar{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.vina-tasks-admin .toolbar .section-title{margin:0 0 8px}
+.vina-new-task{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.vina-new-task input{min-width:220px;min-height:44px;border:1px solid var(--vina-border);border-radius:13px;padding:10px 13px;background:var(--vina-panel);color:var(--vina-ink);font:inherit}
+.vina-new-task input:focus-visible{outline:2px solid var(--vina-accent);outline-offset:2px}
+.vina-new-task button{min-height:44px}
+.vina-tasks-admin #vina-admin-task-list{padding:18px;background:var(--vina-panel);border:1px solid var(--vina-border);border-radius:21px}
+.vina-tasks-admin .vina-task-row{background:transparent}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:740px){.vina-tasks-admin .toolbar{display:grid;gap:14px}.vina-new-task{display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%}.vina-new-task input{min-width:0;width:100%}.vina-tasks-admin #vina-admin-task-list{padding:12px}}
+@media(max-width:380px){.vina-new-task{grid-template-columns:minmax(0,1fr)}.vina-new-task button{width:100%}}
