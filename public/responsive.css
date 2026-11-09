@@ -593,3 +593,12 @@ body[data-view="staff"] .vina-staff-return[hidden]{display:none!important}
 .vina-inventory-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .vina-inventory-delete{color:#b85e52!important;border-color:#b85e5255!important}
 @media(max-width:480px){.vina-inventory-actions{width:100%;justify-content:flex-end}.vina-inventory-actions button{min-height:40px}}
+
+/* Scheduled operations share the same understated card language. */
+.vina-operations-section{margin-top:24px;padding:22px}
+.vina-operations-section h2,.vina-operations-section h3{margin:0 0 10px}
+.vina-operations-section .vina-task-row{gap:14px;align-items:flex-start}
+.vina-operations-section .vina-task-row small{display:block;line-height:1.5;margin-top:5px;overflow-wrap:anywhere}
+.vina-operations-section textarea{min-height:88px;width:100%;box-sizing:border-box;border-radius:12px;padding:12px;font:inherit;background:var(--vina-panel,#342820);color:inherit;border:1px solid var(--vina-border,#786657)}
+.vina-operations-section input[type="datetime-local"],.vina-operations-section select{min-height:45px;width:100%;box-sizing:border-box;font:inherit;border-radius:12px;padding:10px;background:var(--vina-panel,#342820);color:inherit;border:1px solid var(--vina-border,#786657)}
+@media(max-width:700px){.vina-operations-section{padding:16px}.vina-operations-section .vina-task-row{flex-wrap:wrap}}
