@@ -602,3 +602,15 @@ body[data-view="staff"] .vina-staff-return[hidden]{display:none!important}
 .vina-operations-section textarea{min-height:88px;width:100%;box-sizing:border-box;border-radius:12px;padding:12px;font:inherit;background:var(--vina-panel,#342820);color:inherit;border:1px solid var(--vina-border,#786657)}
 .vina-operations-section input[type="datetime-local"],.vina-operations-section select{min-height:45px;width:100%;box-sizing:border-box;font:inherit;border-radius:12px;padding:10px;background:var(--vina-panel,#342820);color:inherit;border:1px solid var(--vina-border,#786657)}
 @media(max-width:700px){.vina-operations-section{padding:16px}.vina-operations-section .vina-task-row{flex-wrap:wrap}}
+
+/* Operations acknowledgment report and staff in-app alert */
+.vina-operation-count{font-size:12px;opacity:.7;white-space:nowrap}
+.vina-operation-report{margin-top:20px;padding:18px;border-radius:16px;border:1px solid var(--vina-border,#cbb7a4)}
+.vina-operation-report .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.vina-operation-report h3{margin:0}
+.vina-operation-person{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--vina-border,#cbb7a4);font-size:13px}
+.vina-operation-person:last-child{border-bottom:0}
+.vina-operation-person span{opacity:.72;text-align:right}
+.vina-staff-operation-alert{width:100%;padding:14px 18px;margin:0 0 16px;border-radius:14px;border:1px solid #b88c5b88;background:#b88c5b20;color:inherit;text-align:left;font:inherit;font-size:13px;cursor:pointer}
+.vina-staff-operation-alert[hidden]{display:none!important}
+[data-staff-nav="tasks"].vina-has-alerts:after{content:"●";color:#cb825a;font-size:10px;margin-left:5px}
