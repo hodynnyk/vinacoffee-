@@ -138,6 +138,14 @@ if(path.startsWith('/api/inventory')){
   return reply({ok:true,id},201);
  }
  const match=path.match(/^\/api\/inventory\/([a-f0-9-]{36})$/);
+ if(match&&request.method==='DELETE'){
+  if(user.role!=='owner')return reply({error:'Видаляти товари може лише власник'},403);
+  const item=await env.DB.prepare('SELECT id,name FROM inventory_items WHERE id=?').bind(match[1]).first();
+  if(!item)return reply({error:'Товар не знайдено'},404);
+  await env.DB.prepare('DELETE FROM inventory_items WHERE id=?').bind(item.id).run();
+  await audit(env,user.id,'inventory.deleted','inventory',item.id);
+  return reply({ok:true});
+ }
  if(match&&request.method==='PATCH'){
   const input=await body(request);
   if(typeof input.name!=='string'||input.name.trim().length<2||input.name.trim().length>100||typeof input.quantity!=='number'||!Number.isFinite(input.quantity)||input.quantity<0||input.quantity>1000000||typeof input.unit!=='string'||!input.unit.trim()||input.unit.length>20||typeof input.critical!=='boolean')return reply({error:'Перевірте дані товару'},400);
