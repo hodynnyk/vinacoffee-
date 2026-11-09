@@ -82,6 +82,11 @@ await env.DB.prepare("CREATE TABLE IF NOT EXISTS task_completions (task_id TEXT 
 const workDate=kyivLocalDate(new Date());
 if(path==='/api/tasks'&&request.method==='GET'){
 const rows=await env.DB.prepare("SELECT t.id,t.title,t.active,c.completed_at FROM task_templates t LEFT JOIN task_completions c ON c.task_id=t.id AND c.employee_id=? AND c.work_date=? WHERE t.active=1 OR ? IN ('owner','manager') ORDER BY t.created_at,t.id").bind(user.id,workDate,user.role).all();return reply({date:workDate,tasks:rows.results})}
+if(path==='/api/tasks/completions'&&request.method==='GET'){
+if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+const rows=await env.DB.prepare("SELECT c.task_id,t.title,c.employee_id,e.display_name,c.work_date,c.completed_at FROM task_completions c JOIN task_templates t ON t.id=c.task_id JOIN employees e ON e.id=c.employee_id WHERE c.work_date=? ORDER BY c.completed_at DESC LIMIT 200").bind(workDate).all();
+return reply({date:workDate,completions:rows.results});
+}
 if(path==='/api/tasks'&&request.method==='POST'){
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 const input=await body(request);if(typeof input.title!=='string'||input.title.trim().length<3||input.title.trim().length>120)return reply({error:'Назва завдання має містити від 3 до 120 символів'},400);
