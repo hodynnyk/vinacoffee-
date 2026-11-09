@@ -84,6 +84,19 @@ if(path.startsWith('/api/operations')){
   const rows=await env.DB.prepare("SELECT o.*,a.acknowledged_at FROM operations o LEFT JOIN operation_ack a ON a.operation_id=o.id AND a.employee_id=? WHERE (?=1 OR (o.active=1 AND o.publish_at<=?)) ORDER BY o.publish_at DESC LIMIT 100").bind(user.id,isAdmin?1:0,new Date().toISOString()).all();
   return reply({items:rows.results});
  }
+ if(path==='/api/operations/summary'&&request.method==='GET'){
+  if(!isAdmin)return reply({error:'Недостатньо прав'},403);
+  const result=await env.DB.prepare("SELECT o.id,o.title,o.kind,o.publish_at,o.event_at,o.active,COUNT(DISTINCT e.id) AS staff_total,COUNT(DISTINCT a.employee_id) AS acknowledged_total FROM operations o LEFT JOIN employees e ON e.active=1 AND e.role='barista' LEFT JOIN operation_ack a ON a.operation_id=o.id AND a.employee_id=e.id GROUP BY o.id ORDER BY o.publish_at DESC LIMIT 100").all();
+  return reply({items:result.results});
+ }
+ const ackList=path.match(/^\/api\/operations\/([a-f0-9-]{36})\/acknowledgments$/);
+ if(ackList&&request.method==='GET'){
+  if(!isAdmin)return reply({error:'Недостатньо прав'},403);
+  const op=await env.DB.prepare('SELECT id FROM operations WHERE id=?').bind(ackList[1]).first();
+  if(!op)return reply({error:'Подію не знайдено'},404);
+  const result=await env.DB.prepare("SELECT e.id,e.display_name,a.acknowledged_at FROM employees e LEFT JOIN operation_ack a ON a.employee_id=e.id AND a.operation_id=? WHERE e.active=1 AND e.role='barista' ORDER BY a.acknowledged_at IS NULL DESC,e.display_name").bind(ackList[1]).all();
+  return reply({staff:result.results});
+ }
  if(path==='/api/operations'&&request.method==='POST'){
   if(!isAdmin)return reply({error:'Недостатньо прав'},403);
   const v=await body(request);
