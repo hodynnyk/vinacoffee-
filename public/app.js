@@ -158,7 +158,14 @@ async function adminInventory(){
  form.onsubmit=async event=>{event.preventDefault();const v=Object.fromEntries(new FormData(form));const button=form.querySelector('[type=submit]');pending(button,true,'Зберігаємо…');try{await post('inventory',{name:v.name,quantity:Number(v.quantity),unit:v.unit,critical:v.critical==='on'});toast('Товар додано');await adminInventory()}catch(error){msg(error.message);pending(button,false)}};
  try{
   const data=await api('inventory');const host=$('#vina-inventory-list');
-  host.innerHTML=data.items.length?'<div class="vina-task-list">'+data.items.map(x=>'<div class="vina-task-row"><div><strong>'+esc(x.name)+'</strong><small>'+(x.critical?'● Критичний · ':'')+esc(x.quantity)+' '+esc(x.unit)+(x.quantity===0?' · Немає в наявності':'')+'</small></div><button class="ghost" type="button" data-inventory-edit="'+esc(x.id)+'">Редагувати</button></div>').join('')+'</div>':'<p class="muted">Додайте перший товар до складу.</p>';
+  host.innerHTML=data.items.length?'<div class="vina-task-list">'+data.items.map(x=>'<div class="vina-task-row"><div><strong>'+esc(x.name)+'</strong><small>'+(x.critical?'● Критичний · ':'')+esc(x.quantity)+' '+esc(x.unit)+(x.quantity===0?' · Немає в наявності':'')+'</small></div><div class="vina-inventory-actions"><button class="ghost" type="button" data-inventory-edit="'+esc(x.id)+'">Редагувати</button>'+(currentUser.role==='owner'?'<button class="ghost vina-inventory-delete" type="button" data-inventory-delete="'+esc(x.id)+'">Видалити</button>':'')+'</div></div>').join('')+'</div>':'<p class="muted">Додайте перший товар до складу.</p>';
+  host.querySelectorAll('[data-inventory-delete]').forEach(button=>button.onclick=async()=>{
+   const item=data.items.find(x=>x.id===button.dataset.inventoryDelete);if(!item)return;
+   const ok=await confirmAction('Товар «'+item.name+'» буде видалено зі складу. Попередні повідомлення бариста залишаться в історії.',{title:'Видалити товар?',confirmLabel:'Видалити',danger:true});
+   if(!ok)return;
+   pending(button,true,'Видаляємо…');
+   try{await api('inventory/'+item.id,{method:'DELETE'});toast('Товар видалено');await adminInventory()}catch(error){msg(error.message);if(button.isConnected)pending(button,false)}
+  });
   host.querySelectorAll('[data-inventory-edit]').forEach(button=>button.onclick=()=>{
    const x=data.items.find(item=>item.id===button.dataset.inventoryEdit);if(!x)return;
    let editor=$('#vina-inventory-editor');editor?.remove();
