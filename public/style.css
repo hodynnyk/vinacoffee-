@@ -235,3 +235,14 @@ body[data-view="admin"] .overview-actions .ghost{font-size:12px;min-width:0;padd
 body[data-view="admin"] .shift-summary .card{padding:17px}
 body[data-view="admin"] .shift-summary .metric{font-size:32px}
 }
+
+/* VINA splash: calm, branded, no fake logo or spinning gimmicks */
+.vina-splash{position:fixed;inset:0;z-index:9999;background:#241b17;display:grid;place-items:center;padding:30px;opacity:1;visibility:visible;transition:opacity .5s ease,visibility .5s ease}
+.vina-splash-inner{width:min(250px,80vw);display:flex;align-items:center;flex-direction:column;gap:24px;transform:translateY(-12px)}
+.vina-splash-inner img{display:block;width:min(194px,66vw);height:auto;filter:drop-shadow(0 6px 18px #00000016)}
+.vina-splash-inner p{color:#c9b5a5;font-size:11px;letter-spacing:.13em;text-align:center;font-weight:500}
+.vina-splash-line{width:102px;height:2px;background:#ffffff20;border-radius:8px;overflow:hidden}
+.vina-splash-line span{display:block;width:40%;height:100%;background:#d9b89b;border-radius:8px;animation:vina-loading 1.7s ease-in-out infinite}
+.vina-splash.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes vina-loading{0%{transform:translateX(-110%)}50%{transform:translateX(145%)}100%{transform:translateX(280%)}}
+@media(prefers-reduced-motion:reduce){.vina-splash-line span{animation:none;width:100%}.vina-splash{transition:none}}
