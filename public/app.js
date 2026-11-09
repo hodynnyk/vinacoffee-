@@ -43,8 +43,29 @@ $('#refresh-my-shifts').onclick=async()=>{const button=$('#refresh-my-shifts');i
 await loadMyShifts();await loadStaffTasks()
 }
 async function loadStaffTasks(){
-const host=$('#vina-staff-tasks');if(!host)return;
-try{const data=await api('tasks');const tasks=data.tasks||[];host.innerHTML=tasks.length?'<div class="vina-task-list">'+tasks.map(t=>'<div class="vina-task-row"><div><strong>'+esc(t.title)+'</strong><small>'+(t.completed_at?'Виконано сьогодні':'Очікує виконання')+'</small></div><button type="button" class="ghost" data-task-complete="'+esc(t.id)+'" '+(t.completed_at?'disabled':'')+'>'+(t.completed_at?'✓ Готово':'Виконано')+'</button></div>').join('')+'</div>':'<p class="muted">На сьогодні завдань немає.</p>';host.querySelectorAll('[data-task-complete]').forEach(b=>b.onclick=async()=>{pending(b,true,'Зберігаємо…');try{await post('tasks/'+b.dataset.taskComplete+'/complete',{});await loadStaffTasks();toast('Завдання виконано')}catch(e){msg(e.message);pending(b,false)}})}catch(e){host.textContent='Не вдалося завантажити завдання: '+e.message}}
+ const host=$('#vina-staff-tasks');if(!host)return;
+ try{
+  const data=await api('tasks');
+  const tasks=data.tasks||[];
+  host.innerHTML=tasks.length
+   ?'<div class="vina-task-list">'+tasks.map(t=>'<div class="vina-task-row"><div><strong>'+esc(t.title)+'</strong><small>'+(t.completed_at?'Виконано сьогодні':'Очікує виконання')+'</small></div><button type="button" class="ghost" data-task-complete="'+esc(t.id)+'" '+(t.completed_at?'disabled':'')+'>'+(t.completed_at?'✓ Готово':'Виконано')+'</button></div>').join('')+'</div>'
+   :'<p class="muted">На сьогодні завдань немає.</p>';
+  host.querySelectorAll('[data-task-complete]').forEach(button=>{
+   button.onclick=async()=>{
+    pending(button,true,'Зберігаємо…');
+    try{
+     await post('tasks/'+button.dataset.taskComplete+'/complete',{});
+     await loadStaffTasks();
+     toast('Завдання виконано');
+    }catch(error){
+     msg(error.message);
+     pending(button,false);
+    }
+   };
+  });
+ }catch(error){
+  host.textContent='Не вдалося завантажити завдання: '+error.message;
+ }
 }
 async function loadMyShifts(){try{const data=await api('shifts/mine');const open=data.shifts.find(s=>!s.closed_at);$('#shift-status').innerHTML=open?'<span class="vina-shift-indicator is-open"><i aria-hidden="true"></i>Зміна відкрита</span>':'<span class="vina-shift-indicator is-closed"><i aria-hidden="true"></i>Зміна не відкрита</span>';$('#shift-action').innerHTML='<button class="button" id="shift-button">'+(open?'Закрити зміну':'Відкрити зміну')+'</button>';$('#shift-button').onclick=async()=>{const button=$('#shift-button');if(button.disabled)return;if(open&&!(await confirmAction('Після закриття зміни її не можна продовжити.',{title:'Завершити робочу зміну?',confirmLabel:'Закрити зміну'})))return;pending(button,true,open?'Закриваємо…':'Відкриваємо…');try{await post(open?'shifts/close':'shifts/open',{});toast(open?'Зміну успішно закрито':'Зміну успішно відкрито');await loadMyShifts()}catch(e){msg(e.message);pending(button,false)}};$('#my-shifts').innerHTML=data.shifts.length?'<div class="vina-shift-list">'+data.shifts.slice(0,25).map((s,i)=>'<div class="vina-shift-row"><span class="vina-shift-row-index">'+String(i+1).padStart(2,'0')+'</span><div class="vina-shift-row-info"><strong>'+esc(new Intl.DateTimeFormat('uk-UA',{day:'numeric',month:'long',year:'numeric'}).format(new Date(s.opened_at)))+'</strong><span>Робоча зміна</span></div><span class="vina-shift-row-state '+(s.closed_at?'':'is-active')+'">'+(s.closed_at?'Завершена':'Активна')+'</span></div>').join('')+'</div>':'<div class="vina-shift-empty"><span aria-hidden="true">✳</span><strong>Історія починається тут</strong><p>Ваші робочі зміни з’являться після першого відкриття.</p></div>';}catch(e){msg('Помилка завантаження змін: '+e.message)}}
 const shiftDuration=(start,end)=>{const ms=new Date(end||Date.now()).getTime()-new Date(start).getTime();if(!Number.isFinite(ms)||ms<0)return '—';const mins=Math.floor(ms/60000);return Math.floor(mins/60)+' год '+mins%60+' хв'};
