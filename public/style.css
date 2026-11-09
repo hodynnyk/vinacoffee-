@@ -83,3 +83,16 @@ body[data-view="staff"] .shift-panel #shift-action{width:100%}
 body[data-view="staff"] .shift-panel .button{min-height:52px}
 body[data-view="staff"] .tool-card{min-height:125px}
 }
+
+/* Authentic VINA brand mark */
+.sidebar .logo{display:flex;align-items:center;justify-content:flex-start;min-height:85px}
+.sidebar .logo img{display:block;width:156px;height:auto;max-width:100%}
+body[data-view="auth"] .sidebar{align-items:center}
+body[data-view="auth"] .sidebar .logo{justify-content:center;width:172px;min-height:0;padding:8px 6px;border-radius:20px;background:#30241e;box-shadow:0 10px 30px #4a312321}
+body[data-view="auth"] .sidebar .logo img{width:160px}
+@media(max-width:740px){
+.sidebar .logo{min-height:0}
+.sidebar .logo img{width:110px}
+body[data-view="auth"] .sidebar .logo{width:150px;padding:6px}
+body[data-view="auth"] .sidebar .logo img{width:138px}
+}
