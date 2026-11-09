@@ -304,3 +304,22 @@ input:focus,select:focus{border-color:#9e785c;box-shadow:0 0 0 3px #a9826020}
 .vina-danger{background:#8f443c;border-color:#8f443c}
 .vina-danger:hover{background:#78352e;border-color:#78352e}
 @media(max-width:740px){.vina-confirm{padding:25px 22px;width:calc(100% - 36px);margin:auto}.vina-confirm h2{font-size:23px}}
+
+/* VINA Motion 4 — stable, responsive motion on touch devices */
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{-webkit-tap-highlight-color:transparent}
+button{-webkit-user-select:none;user-select:none}
+button:focus:not(:focus-visible){outline:none}
+#content .metric{font-variant-numeric:tabular-nums;min-width:2ch}
+#content .card{contain:layout style}
+#content .overview-person-info,#content .staff-tool-copy{min-width:0}
+#content .table-wrap{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#content .overview-actions button,#content .staff-tool,#content .shift-active-person{transition:background-color var(--motion-normal) ease,border-color var(--motion-normal) ease}
+@media(hover:hover) and (pointer:fine){#content .staff-tool:hover{background:#fbf5ee;border-color:#ddc8b4}}
+@media(max-width:740px){
+html{scroll-padding-top:12px}
+body[data-view="admin"] .sidebar nav{scrollbar-width:none}
+body[data-view="admin"] .sidebar nav::-webkit-scrollbar{display:none}
+#content .table-wrap{max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#content .overview-actions button,#content .staff-tool,#content .shift-active-person{transition:none}}
