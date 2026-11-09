@@ -101,7 +101,7 @@ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недост�
 const input=await body(request);if(typeof input.active!=='boolean')return reply({error:'Невірний статус'},400);
 const result=await env.DB.prepare('UPDATE task_templates SET active=? WHERE id=?').bind(input.active?1:0,status[1]).run();if(!result.meta.changes)return reply({error:'Завдання не знайдено'},404);await audit(env,user.id,input.active?'task.enabled':'task.disabled','task',status[1]);return reply({ok:true})}
 }
-if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:true,bonuses:false,tasks:false,stockReports:false}});
+if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:true,bonuses:false,tasks:true,stockReports:false}});
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 if(path==='/api/staff'&&request.method==='GET'){const result=await env.DB.prepare('SELECT id,display_name,role,rank,active,created_at FROM employees ORDER BY created_at DESC LIMIT 100').all();return reply({staff:result.results})}
 if(path==='/api/audit'&&request.method==='GET'){await env.DB.prepare('CREATE TABLE IF NOT EXISTS audit_events (id TEXT PRIMARY KEY, actor_id TEXT, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT, details_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)').run();const result=await env.DB.prepare('SELECT action,entity_type,created_at FROM audit_events ORDER BY created_at DESC LIMIT 40').all();return reply({events:result.results})}
