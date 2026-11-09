@@ -566,3 +566,11 @@ body[data-view="staff"] #vina-supply-form select{display:block;width:100%;box-si
  body[data-view="auth"] .vina-auth-story,body[data-view="auth"] .vina-auth-panel{padding:30px!important}
  body[data-view="auth"] .vina-auth-story-body h2{font-size:55px!important}
 }
+
+/* Owner task editor */
+.vina-task-admin-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.vina-task-admin-actions .ghost,.vina-task-admin-actions .button{min-height:40px;padding:9px 13px}
+.vina-task-edit-form{display:flex;align-items:end;gap:12px;width:100%;flex-wrap:wrap}
+.vina-task-edit-form label{display:grid;gap:7px;flex:1 1 230px;min-width:0;font-size:12px}
+.vina-task-edit-form input{width:100%;min-height:44px;box-sizing:border-box}
+@media(max-width:600px){.vina-task-row{flex-wrap:wrap}.vina-task-admin-actions{justify-content:flex-start}.vina-task-edit-form .vina-task-admin-actions{width:100%}}
