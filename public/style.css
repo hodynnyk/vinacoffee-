@@ -580,3 +580,69 @@ body[data-view="admin"] .overview-actions{display:grid;grid-template-columns:1fr
 body[data-view="admin"] .overview-actions .ghost{width:100%}
 }
 @media(max-width:380px){body[data-view="admin"] .vina-centre-hero h2{font-size:35px!important}body[data-view="admin"] .vina-centre-hero-top>span:last-child{max-width:82px}}
+
+/* VINA Data Centre / editorial dashboard v3 — replaces promotional hero */
+body[data-view="admin"]{background:#f7f5f0}
+body[data-view="admin"] main{max-width:1480px}
+body[data-view="admin"] main>header{margin-bottom:0;padding-bottom:17px}
+body[data-view="admin"] main>header #page-title{font-size:clamp(23px,2.3vw,31px)}
+body[data-view="admin"] main>header #page-subtitle{font-size:12px}
+.vina-dc{color:#2c2520}
+.vina-dc-masthead{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:21px 0;border-bottom:1px solid #ded7cd}
+.vina-dc-brand{display:flex;align-items:center;gap:13px}
+.vina-dc-monogram{display:grid;place-items:center;width:44px;height:44px;background:#28221d;color:#f4e9dc;font:italic 25px Georgia,serif;border-radius:3px}
+.vina-dc-brand>div{display:grid;gap:2px}
+.vina-dc-brand strong{font-size:14px;letter-spacing:.24em}
+.vina-dc-brand small{font-size:9px;letter-spacing:.15em;color:#968473}
+.vina-dc-masthead-right{font-size:10px;letter-spacing:.14em;color:#9c8975}
+.vina-dc-masthead-right span{font-size:19px;margin-left:12px;color:#ae8d6e}
+.vina-dc-intro{display:flex;align-items:end;justify-content:space-between;gap:24px;padding:51px 0 45px}
+.vina-dc-overline{font-size:10px;letter-spacing:.2em;color:#9b7e64;font-weight:650}
+.vina-dc-intro h2{font:normal clamp(44px,5.3vw,76px)/1.05 Georgia,serif;letter-spacing:-.065em;margin:15px 0 16px}
+.vina-dc-dot{color:#b99170}
+.vina-dc-intro p{font-size:14px;color:#887a6d}
+.vina-dc-text-link{background:transparent;border:0;border-bottom:1px solid #a88b72;border-radius:0;color:#5c4635;font-size:12px;font-weight:650;padding:9px 0;cursor:pointer;white-space:nowrap}
+.vina-dc-text-link span{padding-left:15px}
+.vina-dc-divider{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #dcd4c9;padding:16px 0 18px;font-size:10px;letter-spacing:.16em;font-weight:650;color:#8c7562}
+.vina-dc-divider>span:last-child{color:#aa9888}
+body[data-view="admin"] .vina-dc-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 44px}
+body[data-view="admin"] .vina-dc-metrics .card{position:relative;border-radius:4px;padding:25px 25px 24px;min-height:190px;box-shadow:none;background:#fffefa}
+body[data-view="admin"] .vina-dc-metrics .muted{font-size:11px;letter-spacing:.045em;text-transform:none;font-weight:580;color:#786b60}
+body[data-view="admin"] .vina-dc-metrics .metric{font:normal clamp(50px,5vw,73px)/1 Georgia,serif;letter-spacing:-.055em;margin:21px 0 11px}
+body[data-view="admin"] .vina-dc-metrics p{font-size:11px;color:#998b7f}
+.vina-dc-metric-mark{position:absolute;top:24px;right:24px;color:#b8a18d;font:normal 20px Georgia,serif}
+.vina-dc-columns{margin:0 0 44px}
+.vina-dc-columns .row{margin-bottom:13px}
+.vina-dc-columns .section-title{font:normal clamp(23px,2.6vw,31px) Georgia,serif;margin:0}
+body[data-view="admin"] .vina-dc-columns .card{border-radius:4px;min-height:145px;box-shadow:none}
+.vina-dc-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:43px}
+body[data-view="admin"] .vina-dc-actions .ghost{border-radius:4px;min-height:73px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;font-size:13px;color:#3b2f27;text-align:left;background:#fffefa}
+.vina-dc-actions .ghost span{font:normal 17px Georgia,serif;color:#ad9783}
+.vina-dc-actions .ghost b{font-size:19px;font-weight:400;color:#9c8069}
+.vina-dc-endnote{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #dcd4c9;padding:19px 0 6px;font-size:10px;letter-spacing:.16em;color:#9c8775}
+@media(max-width:740px){
+body[data-view="admin"] main>header{padding-bottom:12px}
+body[data-view="admin"] .vina-dc-masthead{padding:18px 0}
+.vina-dc-monogram{width:38px;height:38px;font-size:23px}
+.vina-dc-masthead-right{font-size:8px;letter-spacing:.05em;max-width:125px;text-align:right}
+.vina-dc-masthead-right span{font-size:14px;margin-left:5px}
+.vina-dc-intro{display:block;padding:39px 0 38px}
+.vina-dc-intro h2{font-size:clamp(44px,12vw,61px);margin:13px 0 14px}
+.vina-dc-intro p{font-size:13px;max-width:280px}
+.vina-dc-intro .vina-dc-text-link{margin-top:19px}
+.vina-dc-divider{padding:14px 0 16px;font-size:9px;letter-spacing:.09em}
+body[data-view="admin"] .vina-dc-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px;margin-bottom:35px}
+body[data-view="admin"] .vina-dc-metrics .card{min-height:154px;padding:18px!important;border-radius:4px!important}
+body[data-view="admin"] .vina-dc-metrics .card:last-child{grid-column:1/-1!important;min-height:135px}
+body[data-view="admin"] .vina-dc-metrics .muted{font-size:11px;letter-spacing:0;line-height:1.3}
+body[data-view="admin"] .vina-dc-metrics .metric{font-size:52px;margin:17px 0 7px}
+body[data-view="admin"] .vina-dc-metrics p{font-size:10px}
+.vina-dc-metric-mark{top:17px;right:15px;font-size:16px}
+.vina-dc-columns{margin-bottom:34px}
+.vina-dc-columns .section-title{font-size:25px}
+.vina-dc-columns .row .vina-dc-text-link{font-size:11px}
+.vina-dc-actions{grid-template-columns:1fr;gap:8px;margin-bottom:32px}
+body[data-view="admin"] .vina-dc-actions .ghost{min-height:61px;padding:14px 18px}
+.vina-dc-endnote{font-size:8px;letter-spacing:.08em}
+}
+@media(max-width:360px){.vina-dc-intro h2{font-size:42px}.vina-dc-masthead-right{max-width:90px}.vina-dc-metrics .card{padding:14px!important}}
