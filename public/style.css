@@ -37,3 +37,6 @@ input,select{border-radius:10px}
 #my-shifts.card:has(.table-wrap),#all-shifts.card:has(.table-wrap),#staff-list.card:has(.table-wrap){border:0}
 #my-shifts .table-wrap,#all-shifts .table-wrap,#staff-list .table-wrap{border:0;border-radius:18px}
 @media(max-width:740px){.sidebar{padding:16px 16px 10px}.logo{font-size:26px}.subtitle{display:none}nav{margin-top:13px}main{padding:23px 16px 45px}header{padding-bottom:18px}.staff-hero{min-height:150px}.staff-hero h2{font-size:25px}.staff-hero .hero-icon{font-size:43px}.shift-panel .button{width:100%}}
+
+/* Hidden must override button display styles, including on mobile. */
+[hidden]{display:none!important}
