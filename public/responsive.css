@@ -200,25 +200,6 @@ body[data-view="admin"] .vina-mobile-nav button .vina-nav-icon{width:17px;height
 .vina-staff-refresh:focus-visible,.vina-staff-shift-action button:focus-visible{outline:3px solid var(--vina-accent,#a47f60);outline-offset:3px}
 @media(max-width:740px){.vina-staff-history .vina-staff-section-title{align-items:center}.vina-staff-refresh{min-height:40px;padding:9px 12px}}
 
-/* Landscape touch viewport: use a single layout model, never half-desktop sidebar. */
-@media (orientation:landscape) and (pointer:coarse) and (max-height:520px){
-body[data-view="admin"] .shell{display:block!important;grid-template-columns:none!important;min-height:100dvh!important}
-body[data-view="admin"] .shell>.sidebar{display:none!important}
-body[data-view="admin"] .shell>main{position:relative!important;display:block!important;grid-column:auto!important;grid-row:auto!important;float:none!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:15px max(20px,env(safe-area-inset-right,0px)) 85px max(20px,env(safe-area-inset-left,0px))!important;box-sizing:border-box!important}
-body[data-view="admin"] main>header{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)!important;align-items:center!important;gap:16px!important;padding:0 0 12px!important;margin:0 0 12px!important}
-body[data-view="admin"] main>header .header-right{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;max-width:none!important;width:100%!important}
-body[data-view="admin"] main>header .header-right button,body[data-view="admin"] main>header .header-right .vina-theme-toggle{position:static!important;min-width:0!important;width:100%!important;height:auto!important;min-height:36px!important;padding:7px 5px!important;margin:0!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:11px!important;line-height:1.2!important}
-body[data-view="admin"] .vina-dc-masthead{display:none!important}
-body[data-view="admin"] .vina-dc-intro{padding:16px 0 20px!important}
-body[data-view="admin"] .vina-dc-intro h2{font-size:clamp(38px,6vw,53px)!important}
-body[data-view="admin"] .vina-dc-metrics{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
-body[data-view="admin"] .vina-dc-metrics .card{min-width:0!important;overflow:hidden!important;border-radius:21px!important}
-body[data-view="admin"] .vina-dc-metrics .muted{font-size:12px!important;line-height:1.35!important;letter-spacing:0!important;overflow-wrap:anywhere!important}
-body[data-view="admin"] .vina-dc-metric-mark{position:static!important;display:block!important;margin-top:10px!important}
-body[data-view="admin"] #vina-mobile-nav{display:flex!important;position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:70!important}
-body[data-view="admin"] #vina-mobile-menu:not([hidden]){z-index:71!important}
-}
-
 /* Owner workspace palette: warm ink, champagne borders, translucent cream tiles. */
 body[data-view="admin"] main{color:var(--vina-ink)!important}
 body[data-view="admin"] main>header .eyebrow,body[data-view="admin"] .vina-dc-overline,body[data-view="admin"] .vina-dc-divider{color:var(--vina-secondary)!important}
@@ -234,4 +215,32 @@ body[data-view="admin"] #vina-mobile-nav button[aria-current="page"]{color:var(-
 @media(orientation:landscape) and (pointer:coarse) and (max-height:520px){
 body[data-view="admin"] .vina-dc-metrics .card{background:color-mix(in srgb,var(--vina-panel) 83%,transparent)!important}
 body[data-view="admin"] main>header .header-right button{box-shadow:none!important}
+}
+
+/* Landscape owner layout: retain original side navigation, make it solid and non-overlapping. */
+@media (orientation:landscape) and (pointer:coarse) and (max-height:520px) and (min-width:741px){
+body[data-view="admin"] .shell{display:grid!important;grid-template-columns:210px minmax(0,1fr)!important;align-items:stretch!important;min-height:100dvh!important}
+body[data-view="admin"] .shell>.sidebar{display:flex!important;position:relative!important;inset:auto!important;grid-column:1!important;grid-row:1!important;flex-direction:column!important;align-items:stretch!important;width:210px!important;min-width:210px!important;max-width:210px!important;height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important;margin:0!important;padding:17px 13px 25px!important;background:#241c17!important;border:0!important;box-shadow:none!important}
+body[data-view="admin"] .sidebar .logo{display:flex!important;align-items:center!important;justify-content:flex-start!important;height:60px!important;min-height:60px!important;margin:0 0 10px!important;padding:0 7px!important}
+body[data-view="admin"] .sidebar .logo img{width:100px!important;max-width:100px!important;height:53px!important;max-height:53px!important;object-fit:contain!important}
+body[data-view="admin"] .sidebar nav{display:flex!important;flex-direction:column!important;gap:4px!important;margin:0!important;padding:0!important}
+body[data-view="admin"] .sidebar nav button{display:flex!important;align-items:center!important;gap:10px!important;min-height:38px!important;padding:8px 12px!important;border-radius:12px!important;color:#e9d7c5!important;background:transparent!important;border:1px solid transparent!important;font-size:12px!important}
+body[data-view="admin"] .sidebar nav button.active{background:#ffffff13!important;border-color:#d6b59655!important;color:#fff5e9!important}
+body[data-view="admin"] .sidebar .subtitle,body[data-view="admin"] .sidebar .sidebar-bottom{display:none!important}
+body[data-view="admin"] .shell>main{grid-column:2!important;grid-row:1!important;display:block!important;float:none!important;position:relative!important;width:auto!important;min-width:0!important;max-width:none!important;margin:0!important;padding:15px 19px 38px!important}
+body[data-view="admin"] main>header{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important;padding:0 0 12px!important;margin:0 0 10px!important}
+body[data-view="admin"] main>header .header-right{display:flex!important;flex-wrap:wrap!important;justify-content:flex-start!important;max-width:100%!important;width:100%!important;gap:7px!important}
+body[data-view="admin"] main>header .header-right button{width:auto!important;max-width:none!important;min-height:34px!important;height:34px!important;padding:6px 11px!important;white-space:nowrap!important;font-size:11px!important}
+body[data-view="admin"] .vina-dc-intro{padding:15px 0 20px!important}
+body[data-view="admin"] .vina-dc-intro h2{font-size:clamp(35px,5vw,50px)!important}
+body[data-view="admin"] .vina-dc-metrics{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}
+body[data-view="admin"] .vina-dc-metrics .card{min-width:0!important;overflow:hidden!important}
+body[data-view="admin"] .vina-dc-metrics .muted{font-size:11px!important;letter-spacing:0!important;overflow-wrap:anywhere}
+body[data-view="admin"] .vina-dc-metric-mark{position:static!important;display:block!important;margin-top:7px!important}
+body[data-view="admin"] #vina-mobile-nav{display:none!important}
+body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:none!important}
+}
+/* On portrait phones the More panel is a real overlay, not an invisible desktop-only element. */
+@media(max-width:740px){
+body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:block!important;position:fixed!important;z-index:1000!important;left:12px!important;right:12px!important;bottom:calc(66px + env(safe-area-inset-bottom,0px))!important;max-height:calc(100dvh - 110px)!important;overflow-y:auto!important;background:var(--vina-panel)!important;color:var(--vina-ink)!important;border:1px solid var(--vina-border)!important;border-radius:19px!important;box-shadow:0 15px 45px #1c191733!important}
 }
