@@ -293,3 +293,14 @@ input:focus,select:focus{border-color:#9e785c;box-shadow:0 0 0 3px #a9826020}
 .vina-skeleton-metric{height:42px;width:64px;border-radius:9px;margin:2px 0}
 @keyframes vina-skeleton-shimmer{0%{background-position:120% 0}100%{background-position:-120% 0}}
 @media(prefers-reduced-motion:reduce){.vina-skeleton-avatar,.vina-skeleton-line,.vina-skeleton-metric{animation:none;background:#f0e7de}}
+
+/* VINA Motion 3 — calm, intentional confirmations */
+.vina-confirm{max-width:410px;padding:30px;border-radius:23px;background:#fffdf9;border:1px solid #e7d9ca;color:#35271f}
+.vina-confirm h2{font:600 25px Georgia,serif;margin:14px 0 10px;letter-spacing:-.025em}
+.vina-confirm p{font-size:14px;line-height:1.65;color:#806d5f}
+.vina-confirm .actions{margin-top:27px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vina-confirm .actions button{min-height:49px;border-radius:13px}
+.vina-confirm-icon{width:45px;height:45px;display:grid;place-items:center;background:#f1e7dc;color:#6c4c37;border-radius:14px;font-weight:800;font-size:20px}
+.vina-danger{background:#8f443c;border-color:#8f443c}
+.vina-danger:hover{background:#78352e;border-color:#78352e}
+@media(max-width:740px){.vina-confirm{padding:25px 22px;width:calc(100% - 36px);margin:auto}.vina-confirm h2{font-size:23px}}
