@@ -91,6 +91,11 @@ $('#vina-supply-form').onsubmit=async event=>{event.preventDefault();const form=
 $('#refresh-my-shifts').onclick=async()=>{const button=$('#refresh-my-shifts');if(button.disabled)return;pending(button,true,'Оновлюємо…');try{await loadMyShifts()}finally{pending(button,false)}};
 await loadMyShifts();await loadStaffTasks();try{const catalog=await api('inventory/catalog');const list=$('#vina-supply-catalog');if(list)list.innerHTML='<option value="">Оберіть товар зі складу</option>'+catalog.items.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('')}catch(error){console.warn('Каталог товарів недоступний',error)}
 }
+async function loadStaffOperations(){
+ const tasks=$('#vina-staff-tasks');if(!tasks)return;
+ let host=$('#vina-operations');if(!host){const section=document.createElement('section');section.className='card vina-operations-section';section.innerHTML='<h3>📣 Оголошення та обов’язкові заходи</h3><div id="vina-operations"></div>';tasks.after(section)}
+ await renderOperations(false);
+}
 async function loadStaffTasks(){
  const host=$('#vina-staff-tasks');if(!host)return;
  try{
@@ -191,9 +196,29 @@ async function loadAdminSupplyRequests(){
   });
  }catch(error){host.textContent='Не вдалося завантажити заявки: '+error.message}
 }
+async function renderOperations(admin=false){
+ const host=$('#vina-operations');if(!host)return;
+ try{
+  const data=await api('operations');
+  const items=data.items||[];
+  const now=Date.now();
+  host.innerHTML=(admin?'<form id="vina-operation-form" class="vina-inventory-form"><label>Формат<select name="kind"><option value="event">Обов’язковий захід</option><option value="announcement">Оголошення 📣</option></select></label><label>Назва<input name="title" required minlength="3" maxlength="120"></label><label>Опис<textarea name="details" maxlength="2000"></textarea></label><label>Опублікувати (час Києва)<input type="datetime-local" name="publishAt" required></label><label>Дата заходу (за потреби)<input type="datetime-local" name="eventAt"></label><button class="button" type="submit">Запланувати</button></form>':'')+
+  '<div class="vina-task-list">'+items.map(x=>'<div class="vina-task-row"><div><strong>'+(x.kind==='event'?'🧹 ':'📣 ')+esc(x.title)+'</strong><small>'+esc(x.details||'')+'</small><small>Публікація: '+esc(dateTime(x.publish_at))+(x.event_at?' · Захід: '+esc(dateTime(x.event_at)):'')+(admin?(x.active?' · Активне':' · Вимкнено'):'')+'</small></div><div class="vina-task-admin-actions">'+(admin?'<button type="button" class="ghost" data-operation-edit="'+esc(x.id)+'">Редагувати</button>':(x.acknowledged_at?'<span class="vina-task-done">✓ Ознайомився</span>':'<button type="button" class="ghost" data-operation-ack="'+esc(x.id)+'">Ознайомився</button>'))+'</div></div>').join('')+'</div>';
+  if(!items.length)host.insertAdjacentHTML('beforeend','<p class="muted">Поки немає '+(admin?'запланованих подій.':'нових оголошень.')+'</p>');
+  const form=$('#vina-operation-form');
+  if(form){
+   const toLocal=date=>{const d=new Date(date);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)};
+   form.elements.publishAt.value=toLocal(new Date());
+   form.onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(form));const b=form.querySelector('[type=submit]');pending(b,true,'Зберігаємо…');try{const payload={kind:v.kind,title:v.title,details:v.details||'',publishAt:new Date(v.publishAt).toISOString(),eventAt:v.eventAt?new Date(v.eventAt).toISOString():null,active:true};const id=form.dataset.editId;await api(id?'operations/'+id:'operations',{method:id?'PATCH':'POST',body:JSON.stringify(payload)});toast('Збережено');await renderOperations(true)}catch(err){msg(err.message);pending(b,false)}};
+   host.querySelectorAll('[data-operation-edit]').forEach(button=>button.onclick=()=>{const x=items.find(i=>i.id===button.dataset.operationEdit);if(!x)return;form.dataset.editId=x.id;form.elements.kind.value=x.kind;form.elements.title.value=x.title;form.elements.details.value=x.details;form.elements.publishAt.value=toLocal(x.publish_at);form.elements.eventAt.value=x.event_at?toLocal(x.event_at):'';form.querySelector('[type=submit]').textContent='Зберегти зміни';form.scrollIntoView({behavior:'smooth',block:'start'})});
+  }
+  host.querySelectorAll('[data-operation-ack]').forEach(button=>button.onclick=async()=>{pending(button,true,'Зберігаємо…');try{await post('operations/'+button.dataset.operationAck+'/ack',{});await renderOperations(false)}catch(err){msg(err.message);pending(button,false)}});
+ }catch(err){host.textContent='Не вдалося завантажити оголошення: '+err.message}
+}
 async function adminTasks(){
 const requestId=pageRequestId;
 content.innerHTML='<div class="vina-tasks-admin"><div class="toolbar"><div><h2 class="section-title">Щоденні завдання</h2><p class="muted">Список для персоналу. Відключені завдання приховані від бариста.</p></div><form id="vina-new-task" class="vina-new-task"><label class="sr-only" for="vina-task-title">Назва завдання</label><input id="vina-task-title" name="title" required minlength="3" maxlength="120" placeholder="Нове завдання" autocomplete="off"><button type="submit" class="button">+ Додати</button></form></div><div id="vina-admin-task-list" class="card">'+loadingRows(3)+'</div><section class="vina-task-report"><div class="row"><div><h2 class="section-title">Виконання сьогодні</h2><p class="muted" id="vina-task-report-date">Завантажуємо записи…</p></div><button type="button" class="ghost" id="vina-task-report-refresh">Оновити ↻</button></div><div id="vina-task-completions" class="card">'+loadingRows(2)+'</div></section></div>';
+const operationsSection=document.createElement('section');operationsSection.className='card vina-operations-section';operationsSection.innerHTML='<h2>📣 Заходи та оголошення</h2><p class="muted">Заплануйте публікацію, прибирання, переоблік або інформацію про святкову оплату.</p><div id="vina-operations"></div>';content.querySelector('.vina-tasks-admin').append(operationsSection);renderOperations(true);
 const refreshReport=async()=>{const host=$('#vina-task-completions');if(!host)return;try{const report=await api('tasks/completions');if(requestId!==pageRequestId||currentPage!=='tasks'||!$('#vina-task-completions'))return;const rows=report.completions||[];$('#vina-task-report-date').textContent='Сьогодні · '+report.date+' · '+rows.length+' виконань';host.innerHTML=rows.length?'<div class="vina-task-list">'+rows.map(c=>'<div class="vina-task-row"><div><strong>'+esc(c.title)+'</strong><small>'+esc(c.display_name)+' · '+esc(dateTime(c.completed_at))+'</small></div><span class="vina-task-done">✓ Виконано</span></div>').join('')+'</div>':'<div class="overview-empty">Сьогодні виконаних завдань поки немає.</div>'}catch(err){if(requestId===pageRequestId&&$('#vina-task-completions'))$('#vina-task-completions').textContent='Не вдалося завантажити виконання: '+err.message}};
 $('#vina-task-report-refresh').onclick=async e=>{const b=e.currentTarget;pending(b,true,'Оновлюємо…');try{await refreshReport()}finally{if(b.isConnected)pending(b,false)}};
 refreshReport();
