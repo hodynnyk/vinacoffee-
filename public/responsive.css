@@ -436,3 +436,49 @@ body[data-view="staff"] .vina-staff-tile-expand{font-size:11px}
  body[data-view="staff"] .vina-staff-hub-action strong{font-size:19px!important}
  body[data-view="staff"] .vina-staff-hub-action small{font-size:11px!important}
 }
+
+/* VINA Staff / final mobile-first dashboard composition */
+body[data-view="staff"] .vina-staff-app{width:100%;max-width:900px;margin:0 auto}
+body[data-view="staff"] main>header.vina-staff-header{padding:10px 0 18px!important;gap:12px}
+body[data-view="staff"] main>header.vina-staff-header h1{font-size:clamp(20px,3vw,27px)!important;line-height:1.2!important;margin:0!important}
+body[data-view="staff"] main>header.vina-staff-header .eyebrow{display:none!important}
+body[data-view="staff"] main>header.vina-staff-header #page-subtitle{display:none!important}
+body[data-view="staff"] main>header.vina-staff-header .header-right{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+body[data-view="staff"] main>header.vina-staff-header #vina-theme-toggle{border-radius:12px;white-space:nowrap;min-height:40px;padding:7px 10px;font-size:13px}
+body[data-view="staff"] main>header.vina-staff-header #vina-staff-settings-shortcut{width:40px;height:40px;min-width:40px;border-radius:12px}
+body[data-view="staff"] .vina-staff-hub{margin:0!important;padding:0!important}
+body[data-view="staff"] .vina-staff-hub .vina-staff-section-title{margin:8px 0 20px!important;display:block!important}
+body[data-view="staff"] .vina-staff-hub .vina-staff-section-title h2{font:500 clamp(30px,5vw,43px)/1.15 Georgia,serif!important;letter-spacing:-.025em;margin:8px 0!important}
+body[data-view="staff"] .vina-staff-hub .vina-staff-index{font-size:10px!important;letter-spacing:.18em!important}
+body[data-view="staff"] .vina-staff-hub-intro{font-size:13px;line-height:1.5;opacity:.65;margin:0}
+body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:12px!important;align-items:stretch}
+body[data-view="staff"] .vina-staff-hub-action{grid-column:span 3!important;display:flex!important;flex-direction:column;justify-content:space-between;align-items:flex-start;min-width:0!important;min-height:148px!important;padding:19px!important;gap:18px!important;border-radius:20px!important;border:1px solid var(--vina-border,#645244)!important;box-shadow:none!important;overflow:hidden!important;text-align:left!important;transition:border-color .15s ease,background-color .15s ease}
+body[data-view="staff"] .vina-staff-hub-action[hidden]{display:none!important}
+body[data-view="staff"] .vina-staff-hub-action .vina-staff-feature-top{width:100%;display:flex;justify-content:flex-end;margin:0!important}
+body[data-view="staff"] .vina-staff-hub-action .vina-staff-feature-symbol{font-size:24px!important;line-height:1!important;opacity:.72}
+body[data-view="staff"] .vina-staff-hub-action strong{font:600 clamp(19px,2.6vw,25px)/1.15 inherit!important;font-family:inherit!important;display:block;letter-spacing:-.02em;margin:0 0 7px!important}
+body[data-view="staff"] .vina-staff-hub-action small{display:block;font-size:12px!important;line-height:1.45!important;opacity:.72}
+body[data-view="staff"] .vina-staff-hub-action .vina-staff-tile-expand{display:none!important}
+body[data-view="staff"] .vina-staff-tile-shift{grid-column:span 4!important;min-height:175px!important;background:#38291f!important;color:#f5e9dc!important;background-image:radial-gradient(circle at 105% -20%,transparent 0 65px,#d4b08d25 66px 67px,transparent 68px 105px,#d4b08d20 106px 107px,transparent 108px)!important}
+body[data-view="staff"] .vina-staff-tile-shift strong,body[data-view="staff"] .vina-staff-tile-shift small{color:#f5e9dc!important}
+body[data-view="staff"] .vina-staff-tile-tasks{grid-column:span 2!important;min-height:175px!important;background-image:repeating-radial-gradient(circle at 110% -15%,transparent 0 32px,#bca68b16 33px 34px,transparent 35px 62px)!important}
+body[data-view="staff"] .vina-staff-tile-customer{grid-column:span 3!important;background:#e8d9c5!important;color:#34271f!important;background-image:linear-gradient(145deg,transparent 60%,#5f402d0a 60% 61%,transparent 61%)!important}
+body[data-view="staff"] .vina-staff-tile-customer strong,body[data-view="staff"] .vina-staff-tile-customer small{color:#34271f!important}
+body[data-view="staff"] .vina-staff-tile-supply{grid-column:span 3!important}
+body[data-view="staff"] .vina-staff-tile-history{grid-column:span 6!important;min-height:95px!important;flex-direction:row!important;align-items:center!important}
+body[data-view="staff"] .vina-staff-tile-history .vina-staff-feature-top{width:auto!important;order:2}
+body[data-view="staff"] .vina-staff-inline{grid-column:1/-1!important;padding:0 0 6px!important}
+body[data-view="staff"] .vina-staff-inline-collapse{font-size:12px!important}
+body[data-view="staff"] .vina-staff-footer{margin-top:32px!important}
+@media(max-width:700px){
+ body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ body[data-view="staff"] .vina-staff-tile-shift{grid-column:span 2!important;min-height:156px!important}
+ body[data-view="staff"] .vina-staff-tile-tasks{grid-column:span 1!important;min-height:158px!important}
+ body[data-view="staff"] .vina-staff-tile-customer{grid-column:span 1!important;min-height:158px!important}
+ body[data-view="staff"] .vina-staff-tile-supply{grid-column:span 2!important;min-height:122px!important}
+ body[data-view="staff"] .vina-staff-tile-history{grid-column:span 2!important;min-height:82px!important}
+ body[data-view="staff"] .vina-staff-hub-action{padding:17px!important;border-radius:18px!important;gap:12px!important}
+ body[data-view="staff"] .vina-staff-hub-action strong{font-size:19px!important}
+ body[data-view="staff"] .vina-staff-hub-action small{font-size:11px!important}
+ body[data-view="staff"] .vina-staff-hub .vina-staff-section-title h2{font-size:32px!important}
+}
