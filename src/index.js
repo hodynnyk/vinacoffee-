@@ -101,14 +101,47 @@ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недост�
 const input=await body(request);if(typeof input.active!=='boolean')return reply({error:'Невірний статус'},400);
 const result=await env.DB.prepare('UPDATE task_templates SET active=? WHERE id=?').bind(input.active?1:0,status[1]).run();if(!result.meta.changes)return reply({error:'Завдання не знайдено'},404);await audit(env,user.id,input.active?'task.enabled':'task.disabled','task',status[1]);return reply({ok:true})}
 }
+// Inventory quantities are owner-managed; staff only sees item names.
+if(path.startsWith('/api/inventory')){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE COLLATE NOCASE, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity>=0), unit TEXT NOT NULL DEFAULT 'шт', critical INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
+ if(path==='/api/inventory/catalog'&&request.method==='GET'){
+  const rows=await env.DB.prepare('SELECT id,name FROM inventory_items ORDER BY name LIMIT 200').all();
+  return reply({items:rows.results});
+ }
+ if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+ if(path==='/api/inventory'&&request.method==='GET'){
+  const rows=await env.DB.prepare('SELECT id,name,quantity,unit,critical,updated_at FROM inventory_items ORDER BY critical DESC,name LIMIT 200').all();
+  return reply({items:rows.results});
+ }
+ if(path==='/api/inventory'&&request.method==='POST'){
+  const input=await body(request);
+  if(typeof input.name!=='string'||input.name.trim().length<2||input.name.trim().length>100||typeof input.quantity!=='number'||!Number.isFinite(input.quantity)||input.quantity<0||input.quantity>1000000||typeof input.unit!=='string'||input.unit.trim().length<1||input.unit.length>20||typeof input.critical!=='boolean')return reply({error:'Перевірте назву, кількість, одиницю та важливість'},400);
+  const id=crypto.randomUUID();
+  await env.DB.prepare('INSERT INTO inventory_items(id,name,quantity,unit,critical,updated_at) VALUES(?,?,?,?,?,?)').bind(id,input.name.trim(),input.quantity,input.unit.trim(),input.critical?1:0,new Date().toISOString()).run();
+  await audit(env,user.id,'inventory.created','inventory',id);
+  return reply({ok:true,id},201);
+ }
+ const match=path.match(/^\/api\/inventory\/([a-f0-9-]{36})$/);
+ if(match&&request.method==='POST'){
+  const input=await body(request);
+  if(typeof input.quantity!=='number'||!Number.isFinite(input.quantity)||input.quantity<0||input.quantity>1000000)return reply({error:'Невірна кількість'},400);
+  const result=await env.DB.prepare('UPDATE inventory_items SET quantity=?,updated_at=? WHERE id=?').bind(input.quantity,new Date().toISOString(),match[1]).run();
+  if(!result.meta.changes)return reply({error:'Товар не знайдено'},404);
+  await audit(env,user.id,'inventory.adjusted','inventory',match[1]);return reply({ok:true});
+ }
+}
 // Supply requests do not expose inventory balances to staff.
 if(path.startsWith('/api/supply-requests')){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE COLLATE NOCASE, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity>=0), unit TEXT NOT NULL DEFAULT 'шт', critical INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
  await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_requests (id TEXT PRIMARY KEY, employee_id TEXT NOT NULL, item_name TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','resolved')), created_at TEXT NOT NULL, resolved_at TEXT)").run();
  if(path==='/api/supply-requests'&&request.method==='POST'){
   const input=await body(request);
   if(typeof input.item!=='string'||input.item.trim().length<2||input.item.trim().length>100||typeof input.note!=='string'||input.note.length>300)return reply({error:'Назва товару: 2–100 символів, примітка: до 300'},400);
   const id=crypto.randomUUID();
   await env.DB.prepare('INSERT INTO supply_requests(id,employee_id,item_name,note,created_at) VALUES(?,?,?,?,?)').bind(id,user.id,input.item.trim(),input.note.trim(),new Date().toISOString()).run();
+  // A reported out-of-stock catalog item becomes zero; unknown names stay as requests.
+  const matched=await env.DB.prepare('SELECT id FROM inventory_items WHERE name=? COLLATE NOCASE').bind(input.item.trim()).first();
+  if(matched){await env.DB.prepare('UPDATE inventory_items SET quantity=0,updated_at=? WHERE id=?').bind(new Date().toISOString(),matched.id).run();await audit(env,user.id,'inventory.reported_empty','inventory',matched.id)}
   await audit(env,user.id,'supply.requested','supply_request',id);
   return reply({ok:true,id},201);
  }
