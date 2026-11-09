@@ -21,7 +21,7 @@ const path=new URL(request.url).pathname;
 if(path==='/api/health'){if(request.method!=='GET')return reply({error:'Метод не підтримується'},405);try{await env.DB.prepare('SELECT 1').first();return reply({status:'ok',database:'ready'})}catch{return reply({status:'degraded',database:'unavailable'},503)}}
 if(!path.startsWith('/api/'))return env.ASSETS.fetch(request);
 if(!env.DB)return reply({error:'База даних не налаштована'},503);
-if(request.method==='POST'&&!sameOrigin(request))return reply({error:'Недозволене джерело запиту'},403);
+if(['POST','PATCH','PUT','DELETE'].includes(request.method)&&!sameOrigin(request))return reply({error:'Недозволене джерело запиту'},403);
 try{
 if(path==='/api/auth/setup-status'&&request.method==='GET'){const owner=await env.DB.prepare("SELECT id FROM employees WHERE role='owner' LIMIT 1").first();return reply({setupRequired:!owner,setupEnabled:!!env.OWNER_SETUP_TOKEN})}
 if(path==='/api/auth/setup'&&request.method==='POST'){
@@ -105,7 +105,7 @@ if(path.startsWith('/api/roster')||path.startsWith('/api/leave')){
  if(path==='/api/roster'&&request.method==='POST'){
   if(!admin)return reply({error:'Недостатньо прав'},403);
   const v=await body(request);
-  const time=x=>typeof x==='string'&&x.length===5&&x[2]===':'&&Number(x.slice(0,2))<24&&Number(x.slice(3))<60;
+  const time=x=>typeof x==='string'&&x.length===5&&x[2]===':'&&/^[0-9]{2}$/.test(x.slice(0,2))&&/^[0-9]{2}$/.test(x.slice(3))&&Number(x.slice(0,2))<24&&Number(x.slice(3))<60;
   if(!day(v.workDate)||!time(v.startTime)||!time(v.endTime)||v.startTime===v.endTime||typeof v.employeeId!=='string'||typeof(v.note||'')!=='string'||(v.note||'').length>300)return reply({error:'Перевірте дані зміни'},400);
   const staff=await env.DB.prepare("SELECT id FROM employees WHERE id=? AND active=1 AND role='barista'").bind(v.employeeId).first();
   if(!staff)return reply({error:'Працівника не знайдено'},404);
