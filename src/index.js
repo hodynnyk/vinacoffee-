@@ -23,7 +23,7 @@ if(path==='/api/auth/setup'&&request.method==='POST'){
 if(!env.OWNER_SETUP_TOKEN)return reply({error:'Початкове налаштування вимкнено'},403);
 const input=await body(request);
 if(typeof input.token!=='string'||typeof input.name!=='string'||typeof input.password!=='string')return reply({error:'Невірні дані'},400);
-if(input.name.trim().length<2||input.name.length>80||input.password.length<14||input.password.length>256)return reply({error:'Ім’я або пароль не відповідають вимогам'},400);
+if(input.name.trim().length<2||input.name.length>80||input.password.length<8||input.password.length>256)return reply({error:'Ім’я або пароль не відповідають вимогам'},400);
 const provided=await sha(input.token),expected=await sha(env.OWNER_SETUP_TOKEN);if(provided!==expected)return reply({error:'Невірний код налаштування'},403);
 const id=crypto.randomUUID();const hash=await passwordHash(input.password);
 const result=await env.DB.prepare("INSERT INTO employees(id,display_name,role,password_hash) SELECT ?,?,'owner',? WHERE NOT EXISTS(SELECT 1 FROM employees WHERE role='owner')").bind(id,input.name.trim(),hash).run();
@@ -40,6 +40,16 @@ return reply({ok:true,user:{name:employee.display_name,role:employee.role}},200,
 }
 const user=await session(request,env);if(!user)return reply({error:'Потрібна авторизація'},401);
 if(path==='/api/auth/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role}});
+if(path==='/api/auth/change-password'&&request.method==='POST'){
+const input=await body(request);
+if(typeof input.currentPassword!=='string'||typeof input.newPassword!=='string'||input.newPassword.length<8||input.newPassword.length>256||input.currentPassword===input.newPassword)return reply({error:'Новий пароль має містити від 8 символів і відрізнятися від старого'},400);
+const record=await env.DB.prepare('SELECT password_hash FROM employees WHERE id=?').bind(user.id).first();
+if(!record||!await checkPassword(input.currentPassword,record.password_hash))return reply({error:'Поточний пароль неправильний'},403);
+const hash=await passwordHash(input.newPassword);
+await env.DB.prepare('UPDATE employees SET password_hash=? WHERE id=?').bind(hash,user.id).run();
+await env.DB.prepare('UPDATE sessions SET revoked_at=? WHERE employee_id=?').bind(new Date().toISOString(),user.id).run();
+return reply({ok:true,message:'Пароль змінено. Увійдіть повторно.'},200,{'set-cookie':sessionCookie('',0)})
+}
 if(path==='/api/auth/logout'&&request.method==='POST'){await env.DB.prepare("UPDATE sessions SET revoked_at=? WHERE id_hash=?").bind(new Date().toISOString(),await sha(cookie(request))).run();return reply({ok:true},200,{'set-cookie':sessionCookie('',0)})}
 if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:false,bonuses:false,tasks:false,stockReports:false}});
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
@@ -48,7 +58,7 @@ if(path==='/api/audit'&&request.method==='GET'){await env.DB.prepare('CREATE TAB
 if(path==='/api/staff'&&request.method==='POST'){
 if(user.role!=='owner')return reply({error:'Лише власник може створювати працівників'},403);
 const input=await body(request);
-if(typeof input.name!=='string'||typeof input.password!=='string'||!['barista','manager'].includes(input.role)||input.name.trim().length<2||input.name.trim().length>80||input.password.length<14||input.password.length>256)return reply({error:'Перевірте ім’я, роль і пароль (від 14 символів)'},400);
+if(typeof input.name!=='string'||typeof input.password!=='string'||!['barista','manager'].includes(input.role)||input.name.trim().length<2||input.name.trim().length>80||input.password.length<8||input.password.length>256)return reply({error:'Перевірте ім’я, роль і пароль (від 8 символів)'},400);
 const exists=await env.DB.prepare('SELECT id FROM employees WHERE display_name=? LIMIT 1').bind(input.name.trim()).first();if(exists)return reply({error:'Працівник з таким ім’ям уже існує'},409);
 const id=crypto.randomUUID(),hash=await passwordHash(input.password);
 await env.DB.prepare('INSERT INTO employees(id,display_name,role,password_hash) VALUES(?,?,?,?)').bind(id,input.name.trim(),input.role,hash).run();
