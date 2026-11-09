@@ -323,3 +323,13 @@ body[data-view="admin"] .sidebar nav::-webkit-scrollbar{display:none}
 #content .table-wrap{max-width:100%}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#content .overview-actions button,#content .staff-tool,#content .shift-active-person{transition:none}}
+
+/* VINA Motion 5 — polished form feedback without artificial delays */
+.button.vina-pending,.ghost.vina-pending{position:relative;gap:10px;opacity:.86}
+.vina-pending::before{content:"";display:inline-block;width:13px;height:13px;flex:none;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:vina-pending-spin .8s linear infinite}
+@keyframes vina-pending-spin{to{transform:rotate(360deg)}}
+.auth-card .button{min-height:51px}
+.auth-card input{min-height:49px}
+.auth-card input:focus-visible{outline:2px solid #bb9476;outline-offset:2px}
+.vina-confirm .button:focus-visible,.vina-confirm .ghost:focus-visible{outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.vina-pending::before{animation:none;border-right-color:currentColor}}
