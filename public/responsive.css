@@ -574,3 +574,17 @@ body[data-view="staff"] #vina-supply-form select{display:block;width:100%;box-si
 .vina-task-edit-form label{display:grid;gap:7px;flex:1 1 230px;min-width:0;font-size:12px}
 .vina-task-edit-form input{width:100%;min-height:44px;box-sizing:border-box}
 @media(max-width:600px){.vina-task-row{flex-wrap:wrap}.vina-task-admin-actions{justify-content:flex-start}.vina-task-edit-form .vina-task-admin-actions{width:100%}}
+
+/* Staff mobile navigation was accidentally scoped to admin only. */
+body[data-view="staff"] .vina-staff-return{display:inline-flex;align-items:center;margin:0 0 18px;padding:10px 15px;border-radius:12px}
+body[data-view="staff"] .vina-staff-return[hidden]{display:none!important}
+@media(max-width:740px){
+ body[data-view="staff"] #vina-mobile-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));position:fixed;bottom:0;left:0;right:0;z-index:900;padding:5px 9px calc(6px + env(safe-area-inset-bottom,0px));background:var(--vina-panel,#29221d);border-top:1px solid var(--vina-border,#5b4637);box-shadow:0 -6px 30px #00000012}
+ body[data-view="staff"] #vina-mobile-nav button{min-width:0;min-height:48px;border:0;border-radius:12px;background:transparent;color:var(--vina-secondary,#bca38d);display:grid;justify-items:center;align-content:center;gap:3px;font:inherit}
+ body[data-view="staff"] #vina-mobile-nav button[aria-current="page"]{background:var(--vina-border,#4b382b);color:var(--vina-ink,#f7e7d7)}
+ body[data-view="staff"] #vina-mobile-nav button .vina-nav-icon{width:21px;height:21px}
+ body[data-view="staff"] #vina-mobile-nav button small{font-size:10px;font-weight:600}
+ body[data-view="staff"] #vina-mobile-menu:not([hidden]){display:grid!important;position:fixed;z-index:899;left:12px;right:12px;bottom:calc(69px + env(safe-area-inset-bottom,0px));padding:10px;border-radius:18px;background:var(--vina-panel,#29221d);border:1px solid var(--vina-border,#5b4637);box-shadow:0 10px 35px #0003;gap:5px}
+ body[data-view="staff"] #vina-mobile-menu button{padding:14px;border:0;border-radius:12px;background:transparent;color:inherit;text-align:left;display:flex;align-items:center;gap:12px;font:inherit}
+ body[data-view="staff"] main{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+}
