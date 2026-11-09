@@ -40,3 +40,46 @@ input,select{border-radius:10px}
 
 /* Hidden must override button display styles, including on mobile. */
 [hidden]{display:none!important}
+
+/* Authentication and mobile staff refinement */
+body[data-view="auth"]{background:radial-gradient(circle at 50% 5%,#f1e4d2 0,transparent 48%),#faf7f1}
+body[data-view="auth"] .shell{display:block;min-height:100dvh}
+body[data-view="auth"] .sidebar{width:100%;height:auto;min-height:0;padding:28px 20px 0;background:transparent;border:0;display:flex;align-items:center;color:#3b2b22}
+body[data-view="auth"] .sidebar .logo{font-size:38px;letter-spacing:.13em;text-align:center}
+body[data-view="auth"] .sidebar .logo span{display:block;margin:9px 0 0;font-size:10px;color:#9d7658;letter-spacing:.42em}
+body[data-view="auth"] .sidebar .subtitle,body[data-view="auth"] .sidebar nav,body[data-view="auth"] .sidebar-bottom{display:none}
+body[data-view="auth"] main{width:min(100%,500px);padding:42px 20px 60px;margin:auto}
+body[data-view="auth"] header{display:block;text-align:center;border:0;padding:0;margin:0 0 26px}
+body[data-view="auth"] header .eyebrow{display:none}
+body[data-view="auth"] h1{font-size:clamp(29px,6vw,38px);margin:0 0 10px}
+body[data-view="auth"] header p{font-size:14px}
+body[data-view="auth"] .header-right{display:none}
+body[data-view="auth"] .auth-card{max-width:none;padding:30px;border:1px solid #e7d9ca;background:#fffefa;border-radius:24px;box-shadow:0 18px 60px #6448320e}
+body[data-view="auth"] .auth-card-title{font-size:19px;font-weight:650;margin:0 0 25px;color:#493225}
+body[data-view="auth"] .auth-card form{gap:19px}
+body[data-view="auth"] .auth-card label{font-size:13px;gap:9px}
+body[data-view="auth"] .auth-card input{height:51px;border-radius:12px;background:#fff}
+body[data-view="auth"] .auth-card .button{width:100%;min-height:52px;font-size:15px;margin-top:5px}
+body[data-view="auth"] .auth-footnote{text-align:center;font-size:11px;margin-top:20px;color:#9a8575}
+body[data-view="auth"] .notice{font-size:13px}
+body[data-view="staff"] .sidebar{background:#30241e}
+body[data-view="staff"] main{max-width:1020px}
+body[data-view="staff"] .staff-hero{border-radius:22px}
+body[data-view="staff"] .tool-card{border-radius:18px}
+@media(max-width:740px){
+body[data-view="auth"] .sidebar{padding-top:36px}
+body[data-view="auth"] .sidebar .logo{font-size:35px}
+body[data-view="auth"] main{padding:42px 18px 55px}
+body[data-view="auth"] .auth-card{padding:24px 21px;border-radius:21px}
+body[data-view="auth"] header{margin-bottom:24px}
+body[data-view="staff"] header{margin-bottom:18px}
+body[data-view="staff"] h1{font-size:30px}
+body[data-view="staff"] .header-right{justify-content:flex-end}
+body[data-view="staff"] .header-right .ghost{flex:1;min-width:0}
+body[data-view="staff"] .staff-hero{padding:24px;min-height:145px}
+body[data-view="staff"] .section-title{margin-top:28px;margin-bottom:13px}
+body[data-view="staff"] .shift-panel{align-items:stretch}
+body[data-view="staff"] .shift-panel #shift-action{width:100%}
+body[data-view="staff"] .shift-panel .button{min-height:52px}
+body[data-view="staff"] .tool-card{min-height:125px}
+}
