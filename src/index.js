@@ -136,14 +136,17 @@ if(path.startsWith('/api/supply-requests')){
  await env.DB.prepare("CREATE TABLE IF NOT EXISTS supply_requests (id TEXT PRIMARY KEY, employee_id TEXT NOT NULL, item_name TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','resolved')), created_at TEXT NOT NULL, resolved_at TEXT)").run();
  if(path==='/api/supply-requests'&&request.method==='POST'){
   const input=await body(request);
-  if(typeof input.item!=='string'||input.item.trim().length<2||input.item.trim().length>100||typeof input.note!=='string'||input.note.length>300)return reply({error:'Назва товару: 2–100 символів, примітка: до 300'},400);
-  const id=crypto.randomUUID();
-  await env.DB.prepare('INSERT INTO supply_requests(id,employee_id,item_name,note,created_at) VALUES(?,?,?,?,?)').bind(id,user.id,input.item.trim(),input.note.trim(),new Date().toISOString()).run();
-  // A reported out-of-stock catalog item becomes zero; unknown names stay as requests.
-  const matched=await env.DB.prepare('SELECT id FROM inventory_items WHERE name=? COLLATE NOCASE').bind(input.item.trim()).first();
-  if(matched){await env.DB.prepare('UPDATE inventory_items SET quantity=0,updated_at=? WHERE id=?').bind(new Date().toISOString(),matched.id).run();await audit(env,user.id,'inventory.reported_empty','inventory',matched.id)}
+  if(typeof input.itemId!=='string'||!/^[a-f0-9-]{36}$/.test(input.itemId)||typeof input.note!=='string'||input.note.length>300)return reply({error:'Оберіть товар зі складу; примітка — до 300 символів'},400);
+  const item=await env.DB.prepare('SELECT id,name FROM inventory_items WHERE id=?').bind(input.itemId).first();
+  if(!item)return reply({error:'Товар не знайдено у складі'},404);
+  const id=crypto.randomUUID(),now=new Date().toISOString();
+  await env.DB.batch([
+   env.DB.prepare('UPDATE inventory_items SET quantity=0,updated_at=? WHERE id=?').bind(now,item.id),
+   env.DB.prepare('INSERT INTO supply_requests(id,employee_id,item_name,note,created_at) VALUES(?,?,?,?,?)').bind(id,user.id,item.name,input.note.trim(),now)
+  ]);
+  await audit(env,user.id,'inventory.reported_empty','inventory',item.id);
   await audit(env,user.id,'supply.requested','supply_request',id);
-  return reply({ok:true,id},201);
+  return reply({ok:true,id,itemId:item.id},201);
  }
  if(path==='/api/supply-requests'&&request.method==='GET'){
   if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
