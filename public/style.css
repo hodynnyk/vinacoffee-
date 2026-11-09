@@ -345,3 +345,51 @@ html:focus-within{scroll-behavior:auto}
 input,select,textarea{font-size:16px}
 .vina-toast{bottom:max(18px,env(safe-area-inset-bottom,0px))}
 }
+
+/* VINA Staff · Quiet Luxury — editorial application surface */
+body[data-view="staff"]{background:#f5f1ea;color:#292019}
+body[data-view="staff"] main{max-width:1320px;padding-top:32px}
+body[data-view="staff"] header{margin-bottom:27px}
+body[data-view="staff"] #page-title{font-size:clamp(22px,2.4vw,30px);font-weight:620;letter-spacing:-.045em}
+body[data-view="staff"] .sidebar{background:#211b17}
+.vina-staff-app{display:grid;gap:46px;padding-bottom:32px}
+.vina-staff-hero{min-height:385px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative;background:#211b17;color:#f8f2e9;border-radius:8px;padding:33px clamp(26px,4vw,55px) 24px;isolation:isolate}
+.vina-staff-hero::before{content:"";position:absolute;right:-120px;top:-215px;width:620px;height:620px;border:1px solid #bca58a32;border-radius:50%;box-shadow:0 0 0 90px #bca58a0a,0 0 0 180px #bca58a08;pointer-events:none;z-index:-1}
+.vina-staff-hero-top,.vina-staff-hero-footer{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.vina-staff-wordmark{font-size:17px;font-weight:790;letter-spacing:.2em}
+.vina-staff-wordmark span{font-size:10px;font-weight:500;letter-spacing:.15em;color:#d0bca5}
+.vina-staff-edition,.vina-staff-hero-footer,.vina-staff-overline{font-size:10px;letter-spacing:.18em;font-weight:600;color:#c4ae96}
+.vina-staff-hero-body{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:32px 0}
+.vina-staff-hero h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,6vw,86px);font-weight:400;letter-spacing:-.055em;line-height:1.04;margin:17px 0 17px}
+.vina-staff-hero h2 em{font-weight:400;color:#dfc5a8}
+.vina-staff-hero-body p{color:#c4b4a4;font-size:15px}
+.vina-staff-hero-seal{width:150px;height:150px;flex:none;border:1px solid #c8ad8c66;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transform:rotate(-9deg)}
+.vina-staff-hero-seal span{font:normal 76px/1 Georgia,serif;color:#d7bfa1}
+.vina-staff-hero-seal small{font-size:8px;letter-spacing:.23em;text-align:center;line-height:1.4;color:#d7bfa1}
+.vina-staff-hero-footer{border-top:1px solid #bca58a35;padding-top:18px}
+.vina-staff-section-title{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:20px}
+.vina-staff-index{font-size:10px;letter-spacing:.19em;font-weight:720;color:#9b795f}
+.vina-staff-section-title h2{font:normal clamp(29px,3.2vw,41px)/1.1 Georgia,serif;letter-spacing:-.045em;margin:10px 0 0;color:#2d211b}
+.vina-staff-live,.vina-staff-small-note{font-size:10px;letter-spacing:.11em;color:#897668;font-weight:650;white-space:nowrap}
+.vina-staff-live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#8c9c75;margin-right:5px}
+.vina-staff-shift{background:#fffdf9;border:1px solid #e6dcd0;border-radius:7px;display:flex;align-items:center;justify-content:space-between;gap:25px;padding:34px clamp(22px,3.6vw,48px);box-shadow:0 18px 50px #30211608}
+.vina-staff-shift-label{font-size:10px;font-weight:720;letter-spacing:.17em;color:#98806b}
+.vina-staff-status{font-size:26px;font-weight:620;letter-spacing:-.035em;margin:15px 0 11px}
+.vina-staff-status p{margin-top:9px!important;font-size:13px}
+.vina-staff-shift-copy>p{font-size:13px}
+.vina-staff-shift-action .button{min-height:54px;padding:15px 29px;background:#2b211b;border-color:#2b211b;border-radius:5px;font-size:13px;min-width:176px}
+.vina-staff-shift-action .button:hover{background:#48372c;border-color:#48372c}
+.vina-staff-feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.vina-staff-feature{min-height:236px;background:#fdfaf5;border:1px solid #e5dbcf;border-radius:7px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.vina-staff-feature-top{display:flex;justify-content:space-between;align-items:start;font-size:10px;letter-spacing:.15em;color:#a28a76}
+.vina-staff-feature-symbol{font:normal 30px Georgia,serif;color:#aa8c70}
+.vina-staff-feature h3{font:normal 27px Georgia,serif;letter-spacing:-.035em;color:#342820;margin:0 0 9px}
+.vina-staff-feature p{font-size:13px;max-width:220px}
+.vina-staff-soon{align-self:flex-start;font-size:9px;letter-spacing:.15em;color:#a58e7b;border-top:1px solid #d9c9b8;padding-top:10px}
+.vina-staff-history-panel{background:#fffdf9;border:1px solid #e6dcd0;border-radius:7px;padding:12px 18px;min-height:95px}
+.vina-staff-history-panel .table-wrap{border:0;box-shadow:none}
+.vina-staff-footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #ddd0c2;padding-top:19px;color:#8b7360;font-size:10px;letter-spacing:.18em;font-weight:650}
+.vina-staff-footer span{color:#a99380}
+@media(max-width:850px){.vina-staff-feature-grid{grid-template-columns:1fr}.vina-staff-feature{min-height:160px}.vina-staff-hero-seal{width:112px;height:112px}.vina-staff-hero-seal span{font-size:57px}}
+@media(max-width:740px){body[data-view="staff"] main{padding:23px 17px 50px}.vina-staff-app{gap:35px}.vina-staff-hero{min-height:345px;padding:25px 23px 21px}.vina-staff-hero h2{font-size:clamp(43px,10vw,65px)}.vina-staff-edition{font-size:8px}.vina-staff-hero-seal{display:none}.vina-staff-shift{display:block;padding:27px 23px}.vina-staff-shift-action{margin-top:24px}.vina-staff-shift-action .button{width:100%}.vina-staff-feature{min-height:155px;padding:22px}.vina-staff-feature h3{font-size:25px}.vina-staff-footer span{font-size:8px;text-align:right}.vina-staff-section-title h2{font-size:33px}}
+@media(prefers-reduced-motion:no-preference){.vina-staff-hero{animation:vina-reveal .55s cubic-bezier(.22,1,.36,1) both}.vina-staff-shift,.vina-staff-feature{animation:vina-reveal .45s cubic-bezier(.22,1,.36,1) both}.vina-staff-feature:nth-child(2){animation-delay:70ms}.vina-staff-feature:nth-child(3){animation-delay:140ms}}
