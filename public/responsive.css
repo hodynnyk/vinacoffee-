@@ -388,3 +388,8 @@ body[data-view="staff"] .vina-staff-tile-supply{background-image:radial-gradient
  body[data-view="staff"] .vina-staff-layout-row{grid-template-columns:minmax(0,1fr) 42px 42px}
  body[data-view="staff"] .vina-staff-layout-row button{width:42px}
 }
+
+/* Staff settings belongs in the top toolbar next to the theme switch. */
+body[data-view="staff"] main>header .header-right #vina-staff-settings-shortcut{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;height:44px;min-width:44px;padding:0;margin:0;border:1px solid var(--vina-border,#766050);border-radius:14px;background:transparent;color:var(--vina-ink,#f3e7da);font-size:20px;line-height:1;cursor:pointer}
+body[data-view="staff"] main>header .header-right #vina-staff-settings-shortcut:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+body[data-view="staff"] .vina-staff-top-actions{display:none!important}
