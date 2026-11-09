@@ -218,3 +218,20 @@ body[data-view="admin"] .vina-dc-metric-mark{position:static!important;display:b
 body[data-view="admin"] #vina-mobile-nav{display:flex!important;position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:70!important}
 body[data-view="admin"] #vina-mobile-menu:not([hidden]){z-index:71!important}
 }
+
+/* Owner workspace palette: warm ink, champagne borders, translucent cream tiles. */
+body[data-view="admin"] main{color:var(--vina-ink)!important}
+body[data-view="admin"] main>header .eyebrow,body[data-view="admin"] .vina-dc-overline,body[data-view="admin"] .vina-dc-divider{color:var(--vina-secondary)!important}
+body[data-view="admin"] main>header #page-subtitle,body[data-view="admin"] .vina-dc-intro p{color:var(--vina-secondary)!important}
+body[data-view="admin"] .vina-dc-metrics .card{background:color-mix(in srgb,var(--vina-panel) 83%,transparent)!important;border:1px solid var(--vina-border)!important;color:var(--vina-ink)!important;box-shadow:0 8px 26px #241c1708!important;-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px)}
+body[data-view="admin"] .vina-dc-metrics .muted,body[data-view="admin"] .vina-dc-metrics p{color:var(--vina-secondary)!important}
+body[data-view="admin"] .vina-dc-metrics .metric{color:var(--vina-ink)!important}
+body[data-view="admin"] main>header .header-right button{color:var(--vina-ink)!important;border:1px solid var(--vina-border)!important;background:var(--vina-panel)!important}
+html[data-theme="dark"] body[data-view="admin"] main>header .header-right button{background:#342c26!important;color:#f2e9df!important}
+body[data-view="admin"] #vina-mobile-nav{background:var(--vina-panel)!important;border-color:var(--vina-border)!important}
+body[data-view="admin"] #vina-mobile-nav button{color:var(--vina-secondary)!important}
+body[data-view="admin"] #vina-mobile-nav button[aria-current="page"]{color:var(--vina-ink)!important}
+@media(orientation:landscape) and (pointer:coarse) and (max-height:520px){
+body[data-view="admin"] .vina-dc-metrics .card{background:color-mix(in srgb,var(--vina-panel) 83%,transparent)!important}
+body[data-view="admin"] main>header .header-right button{box-shadow:none!important}
+}
