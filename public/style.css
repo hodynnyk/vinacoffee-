@@ -246,3 +246,15 @@ body[data-view="admin"] .shift-summary .metric{font-size:32px}
 .vina-splash.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
 @keyframes vina-loading{0%{transform:translateX(-110%)}50%{transform:translateX(145%)}100%{transform:translateX(280%)}}
 @media(prefers-reduced-motion:reduce){.vina-splash-line span{animation:none;width:100%}.vina-splash{transition:none}}
+
+/* VINA interaction details */
+button:disabled{cursor:wait;opacity:.64;box-shadow:none!important;transform:none!important}
+button:not(:disabled):active{transform:scale(.985)}
+button:focus-visible{outline:3px solid #c7a184;outline-offset:3px}
+.vina-toast{position:fixed;z-index:9500;right:24px;bottom:24px;max-width:min(390px,calc(100vw - 32px));padding:15px 20px;background:#35271f;color:#fffaf4;border:1px solid #765846;border-radius:15px;box-shadow:0 14px 45px #261a1638;font-size:13px;line-height:1.55;opacity:0;visibility:hidden;transform:translateY(12px);pointer-events:none;transition:opacity .23s ease,transform .23s ease,visibility .23s ease}
+.vina-toast.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
+.vina-content-entering{animation:vina-content-in .25s ease-out}
+.vina-content-leaving{opacity:.7}
+@keyframes vina-content-in{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:740px){.vina-toast{left:16px;right:16px;bottom:18px;max-width:none}}
+@media(prefers-reduced-motion:reduce){.vina-content-entering{animation:none}.vina-toast{transition:none}}
