@@ -534,3 +534,12 @@ body[data-view="staff"] .vina-staff-owner-home>.vina-dc-divider{margin-top:27px}
  body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body p{font-size:15px!important}
  body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-footer{margin-top:35px}
 }
+
+/* Owner stock alerts and full item editor */
+.vina-owner-alerts:empty{display:none}
+.vina-owner-alert-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:16px 18px;margin:0 0 18px;text-align:left;border:1px solid #b88c5b80;border-radius:16px;background:#b88c5b1c;color:inherit;font:inherit;cursor:pointer}
+.vina-owner-alert-banner strong{font-size:14px}.vina-owner-alert-banner span{font-size:12px;line-height:1.4}
+.vina-inventory-editor{margin:18px 0;padding:20px;border:1px solid var(--vina-border,#cdbba8);border-radius:18px}
+.vina-inventory-editor h3{margin:0 0 15px}
+body[data-view="staff"] #vina-supply-form select{display:block;width:100%;box-sizing:border-box;min-height:46px;border-radius:12px;padding:11px 12px;font:inherit;font-size:16px;color:var(--vina-ink,#f4e9dd);background:var(--vina-panel,#342820);border:1px solid var(--vina-border,#786657)}
+@media(max-width:740px){.vina-owner-alert-banner{align-items:flex-start;flex-direction:column;gap:6px}.vina-inventory-editor{padding:15px}}
