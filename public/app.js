@@ -56,6 +56,7 @@ const homePanel=document.createElement('section');homePanel.className='vina-staf
 homePanel.innerHTML='<section class="vina-staff-hero"><div class="vina-staff-hero-top"><span class="vina-staff-wordmark">VINA <span>／ STAFF</span></span><span class="vina-staff-edition">WORKSPACE · 01</span></div><div class="vina-staff-hero-body"><div><span class="vina-staff-overline">ВАШ РОБОЧИЙ ДЕНЬ</span><h2>Вітаємо,<br><em>'+esc(user.name)+'</em></h2><p>Усе важливе — на своєму місці.</p></div><div class="vina-staff-hero-seal" aria-hidden="true"><span>V</span><small>COFFEE<br>HOUSE</small></div></div><div class="vina-staff-hero-footer"><span>ПРОСТІР ДЛЯ СПОКІЙНОЇ РОБОТИ</span><span aria-hidden="true">✦</span></div></section><div class="vina-dc-divider"><span>01 / РОБОЧА ЗМІНА</span><span>ПОТОЧНИЙ СТАН</span></div><div id="vina-staff-home-shift"></div><div class="vina-dc-divider"><span>02 / ШВИДКИЙ ДОСТУП</span><span>РОБОЧІ ІНСТРУМЕНТИ</span></div><div class="vina-staff-quick-actions"><button type="button" data-staff-go="tasks">'+vinaIcon('tasks')+'<span>Планер</span><small>Завдання на сьогодні</small></button><button type="button" data-staff-go="customer">'+vinaIcon('team')+'<span>Знайти клієнта</span><small>За номером телефону</small></button><button type="button" data-staff-go="supply">'+vinaIcon('stock')+'<span>Постачання</span><small>Повідомити про нестачу</small></button><button type="button" data-staff-go="history">'+vinaIcon('history')+'<span>Історія</span><small>Попередні зміни</small></button></div>';
 staffHub.replaceWith(homePanel);
 staffDetail.hidden=false;$('#vina-staff-back').remove();
+const staffBack=document.createElement('button');staffBack.type='button';staffBack.className='ghost vina-staff-return';staffBack.textContent='← На головну';staffBack.hidden=true;staffDetail.prepend(staffBack);
 const shiftPanel=panels.shift;
 const shiftHome=$('#vina-staff-home-shift');
 shiftHome.appendChild(shiftPanel);
@@ -66,13 +67,15 @@ function staffNavigate(id){
  if(id==='home'){shiftHome.appendChild(shiftPanel);shiftPanel.hidden=false}
  else if(id==='shift'){staffDetail.insertBefore(shiftPanel,staffDetail.firstChild);shiftPanel.hidden=false}
  staffDetail.hidden=id==='home';
+ staffBack.hidden=id==='home';
  const active=id==='settings'?'':id;
  sideNav.querySelectorAll('[data-staff-nav]').forEach(button=>{button.classList.toggle('active',button.dataset.staffNav===active)});
- mobile.querySelectorAll('[data-staff-nav]').forEach(button=>{button.toggleAttribute('aria-current',button.dataset.staffNav===active)});
+ mobile.querySelectorAll('[data-staff-nav]').forEach(button=>{if(button.dataset.staffNav===active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
  more.hidden=true;document.body.classList.remove('vina-menu-open');
  heading(id==='home'?'Огляд робочого дня':id==='settings'?'Налаштування':({shift:'Робоча зміна',tasks:'Планер завдань',customer:'Знайти клієнта',supply:'Постачання',history:'Історія змін'})[id], 'VINA Staff');
  window.scrollTo({top:0,behavior:'auto'});
 }
+staffBack.onclick=()=>staffNavigate('home');
 sideNav.innerHTML=staffSections.map(([id,label,icon])=>'<button type="button" data-staff-nav="'+id+'">'+vinaIcon(icon)+' '+label+'</button>').join('');
 mobile.innerHTML=staffSections.slice(0,3).map(([id,label,icon])=>'<button type="button" data-staff-nav="'+id+'">'+vinaIcon(icon)+'<small>'+label+'</small></button>').join('')+'<button type="button" id="vina-mobile-more">'+vinaIcon('history')+'<small>Більше</small></button>';
 more.innerHTML=staffSections.slice(3).map(([id,label,icon])=>'<button type="button" data-staff-nav="'+id+'">'+vinaIcon(icon)+' '+label+'</button>').join('');
