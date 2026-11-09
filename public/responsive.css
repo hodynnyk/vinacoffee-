@@ -717,3 +717,13 @@ body[data-view="staff"] .vina-staff-return[hidden]{display:none!important}
 .vina-roster-disclosure .vina-roster-form{padding:18px 0 4px}
 body[data-view="staff"] [data-staff-panel="schedule"][hidden]{display:none!important}
 body[data-view="staff"] .vina-staff-return:not([hidden]){display:inline-flex!important}
+
+/* Staff More menu must stay above the bottom bar and be tappable on iPhone. */
+@media(max-width:740px){
+ body[data-view="staff"] #vina-mobile-nav{z-index:1100!important}
+ body[data-view="staff"] #vina-mobile-more{position:relative;z-index:1102;touch-action:manipulation;cursor:pointer}
+ body[data-view="staff"] #vina-mobile-more.active{background:#b58d6530;border-radius:14px}
+ body[data-view="staff"] #vina-mobile-menu:not([hidden]){display:grid!important;z-index:1101!important;position:fixed!important;left:12px!important;right:12px!important;bottom:calc(83px + env(safe-area-inset-bottom,0px))!important;max-height:calc(100dvh - 130px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
+ body[data-view="staff"] #vina-mobile-menu[hidden]{display:none!important}
+ body[data-view="staff"] #vina-mobile-menu button{min-height:46px;touch-action:manipulation}
+}
