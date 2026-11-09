@@ -91,10 +91,27 @@ $('#vina-supply-form').onsubmit=async event=>{event.preventDefault();const form=
 $('#refresh-my-shifts').onclick=async()=>{const button=$('#refresh-my-shifts');if(button.disabled)return;pending(button,true,'Оновлюємо…');try{await loadMyShifts()}finally{pending(button,false)}};
 await loadMyShifts();await loadStaffTasks();await loadStaffOperations();try{const catalog=await api('inventory/catalog');const list=$('#vina-supply-catalog');if(list)list.innerHTML='<option value="">Оберіть товар зі складу</option>'+catalog.items.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('')}catch(error){console.warn('Каталог товарів недоступний',error)}
 }
+let vinaSeenOperations=new Set();
+async function refreshStaffOperationAlerts(){
+ if(!document.querySelector('#vina-staff-tasks'))return;
+ try{
+  const data=await api('operations');
+  const unread=(data.items||[]).filter(item=>!item.acknowledged_at);
+  const nav=document.querySelector('[data-staff-nav="tasks"]');
+  if(nav){nav.setAttribute('aria-label','Планер'+(unread.length?' · '+unread.length+' нових оголошень':''));nav.classList.toggle('vina-has-alerts',unread.length>0)}
+  let banner=document.querySelector('#vina-staff-operation-alert');
+  if(!banner){banner=document.createElement('button');banner.type='button';banner.id='vina-staff-operation-alert';banner.className='vina-staff-operation-alert';const hero=document.querySelector('.vina-staff-owner-home');if(hero)hero.insertAdjacentElement('afterbegin',banner)}
+  if(banner){banner.hidden=!unread.length;if(unread.length){banner.textContent='📣 '+unread.length+' нових оголошень та заходів · Переглянути планер →';banner.onclick=()=>document.querySelector('[data-staff-nav="tasks"]')?.click()}}
+  for(const item of unread){if(vinaSeenOperations.has(item.id))continue;vinaSeenOperations.add(item.id);if(document.visibilityState==='visible'&&vinaSeenOperations.size>1)toast('📣 Нове оголошення: '+item.title)}
+ }catch(error){console.warn('Оголошення недоступні',error)}
+}
+setInterval(()=>{if(document.visibilityState==='visible')refreshStaffOperationAlerts()},60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshStaffOperationAlerts()});
 async function loadStaffOperations(){
  const tasks=$('#vina-staff-tasks');if(!tasks)return;
  let host=$('#vina-operations');if(!host){const section=document.createElement('section');section.className='card vina-operations-section';section.innerHTML='<h3>📣 Оголошення та обов’язкові заходи</h3><div id="vina-operations"></div>';tasks.after(section)}
  await renderOperations(false);
+ await refreshStaffOperationAlerts();
 }
 async function loadStaffTasks(){
  const host=$('#vina-staff-tasks');if(!host)return;
