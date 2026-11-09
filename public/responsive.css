@@ -393,3 +393,46 @@ body[data-view="staff"] .vina-staff-tile-supply{background-image:radial-gradient
 body[data-view="staff"] main>header .header-right #vina-staff-settings-shortcut{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;height:44px;min-width:44px;padding:0;margin:0;border:1px solid var(--vina-border,#766050);border-radius:14px;background:transparent;color:var(--vina-ink,#f3e7da);font-size:20px;line-height:1;cursor:pointer}
 body[data-view="staff"] main>header .header-right #vina-staff-settings-shortcut:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 body[data-view="staff"] .vina-staff-top-actions{display:none!important}
+
+/* VINA Staff / editorial reset. One calm visual system, no oversized welcome poster. */
+body[data-view="staff"] main>header.vina-staff-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px 18px}
+body[data-view="staff"] main>header.vina-staff-header .header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+body[data-view="staff"] main>header.vina-staff-header #vina-theme-toggle{min-height:42px;padding:9px 12px;border-radius:13px}
+body[data-view="staff"] main>header.vina-staff-header #vina-staff-settings-shortcut{width:42px;height:42px;min-width:42px;border-radius:13px}
+body[data-view="staff"] main>header.vina-staff-header button[hidden]{display:none!important}
+body[data-view="staff"] .vina-staff-app{max-width:1050px;margin-inline:auto}
+body[data-view="staff"] .vina-staff-hero{min-height:0!important;padding:24px 27px!important;border-radius:24px!important}
+body[data-view="staff"] .vina-staff-hero-top{margin-bottom:14px!important}
+body[data-view="staff"] .vina-staff-hero-body{min-height:0!important;display:block!important}
+body[data-view="staff"] .vina-staff-hero-body h2{font-size:clamp(32px,5vw,52px)!important;line-height:1.05!important;margin:7px 0 10px!important}
+body[data-view="staff"] .vina-staff-hero-body h2 br{display:none}
+body[data-view="staff"] .vina-staff-hero-body h2 em{display:inline}
+body[data-view="staff"] .vina-staff-hero-body h2 em:before{content:' '}
+body[data-view="staff"] .vina-staff-hero-body p{margin:0!important;font-size:13px!important}
+body[data-view="staff"] .vina-staff-hero-seal{display:none!important}
+body[data-view="staff"] .vina-staff-hero-footer{display:none!important}
+body[data-view="staff"] .vina-staff-hero .vina-staff-overline{font-size:10px!important;letter-spacing:.14em}
+body[data-view="staff"] .vina-staff-hub{margin-top:25px!important}
+body[data-view="staff"] .vina-staff-hub .vina-staff-section-title{margin-bottom:15px!important}
+body[data-view="staff"] .vina-staff-hub .vina-staff-section-title h2{font-size:clamp(25px,4vw,34px)!important}
+body[data-view="staff"] .vina-staff-hub .vina-staff-feature-grid{gap:12px!important}
+body[data-view="staff"] .vina-staff-hub-action{border-radius:18px!important;min-height:128px!important;padding:19px!important;box-shadow:none!important}
+body[data-view="staff"] .vina-staff-tile-shift{min-height:155px!important}
+body[data-view="staff"] .vina-staff-hub-action .vina-staff-feature-top{opacity:.68}
+body[data-view="staff"] .vina-staff-hub-action .vina-staff-feature-symbol{font-size:19px}
+body[data-view="staff"] .vina-staff-hub-action strong{font-family:inherit!important;font-size:clamp(18px,2.5vw,23px)!important;font-weight:650!important;line-height:1.18!important}
+body[data-view="staff"] .vina-staff-hub-action small{font-size:12px!important;line-height:1.45}
+body[data-view="staff"] .vina-staff-tile-expand{font-size:11px}
+@media(max-width:740px){
+ body[data-view="staff"] main>header.vina-staff-header{gap:9px}
+ body[data-view="staff"] main>header.vina-staff-header .header-right{gap:6px}
+ body[data-view="staff"] .vina-staff-hero{padding:20px!important;border-radius:20px!important}
+ body[data-view="staff"] .vina-staff-hero-top{margin-bottom:12px!important}
+ body[data-view="staff"] .vina-staff-hero-body h2{font-size:clamp(30px,8vw,39px)!important}
+ body[data-view="staff"] .vina-staff-hero .vina-staff-edition{font-size:9px}
+ body[data-view="staff"] .vina-staff-hub{margin-top:22px!important}
+ body[data-view="staff"] .vina-staff-hub-action{min-height:132px!important;padding:15px!important}
+ body[data-view="staff"] .vina-staff-tile-shift{min-height:145px!important}
+ body[data-view="staff"] .vina-staff-hub-action strong{font-size:19px!important}
+ body[data-view="staff"] .vina-staff-hub-action small{font-size:11px!important}
+}
