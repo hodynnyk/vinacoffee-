@@ -2,11 +2,21 @@
   "name": "vinacoffee",
   "main": "src/index.js",
   "compatibility_date": "2026-11-09",
-  "assets": {"directory": "./public", "binding": "ASSETS"},
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "vinacoffee-",
-    "database_id": "664c2621-93ce-4260-ab5c-32e13c7fc9bd",
-    "migrations_dir": "migrations"
-  }]
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vinacoffee-",
+      "database_id": "664c2621-93ce-4260-ab5c-32e13c7fc9bd",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/5 * * * *"
+    ]
+  }
 }
