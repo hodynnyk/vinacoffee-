@@ -646,3 +646,27 @@ body[data-view="admin"] .vina-dc-actions .ghost{min-height:61px;padding:14px 18p
 .vina-dc-endnote{font-size:8px;letter-spacing:.08em}
 }
 @media(max-width:360px){.vina-dc-intro h2{font-size:42px}.vina-dc-masthead-right{max-width:90px}.vina-dc-metrics .card{padding:14px!important}}
+
+/* Native-feeling mobile navigation for VINA Data Centre */
+.vina-mobile-nav,.vina-mobile-menu{display:none}
+@media(max-width:740px){
+body[data-view="admin"]{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))}
+body[data-view="admin"] .sidebar{padding:14px 19px 12px}
+body[data-view="admin"] .sidebar nav{display:none!important}
+body[data-view="admin"] .sidebar .logo img{max-width:105px;height:auto}
+body[data-view="admin"] .sidebar .subtitle{display:none}
+body[data-view="admin"] .vina-mobile-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));position:fixed;bottom:0;left:0;right:0;z-index:900;padding:8px 9px calc(9px + env(safe-area-inset-bottom,0px));background:#fffdf9;border-top:1px solid #e5dbcf;box-shadow:0 -8px 35px #281b120c}
+body[data-view="admin"] .vina-mobile-nav button{min-width:0;min-height:55px;border:0;background:transparent;color:#958171;display:grid;justify-items:center;align-content:center;gap:4px;cursor:pointer;border-radius:5px}
+body[data-view="admin"] .vina-mobile-nav button[aria-current="page"]{color:#32251c;background:#f2e9de}
+body[data-view="admin"] .vina-mobile-nav button>span{font:normal 23px/1 Georgia,serif}
+body[data-view="admin"] .vina-mobile-nav button>small{font-size:10px;font-weight:650;letter-spacing:.01em}
+body[data-view="admin"] .vina-mobile-menu:not([hidden]){display:block;position:fixed;bottom:calc(77px + env(safe-area-inset-bottom,0px));left:12px;right:12px;z-index:899;padding:20px;background:#fffdf9;border:1px solid #e1d4c6;box-shadow:0 15px 55px #24180f30;border-radius:9px}
+body[data-view="admin"] .vina-mobile-menu-title{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;font-size:10px;font-weight:700;letter-spacing:.17em;color:#967c68}
+body[data-view="admin"] .vina-mobile-menu-title button{font-size:26px;border:0;background:transparent;color:#5b4433;cursor:pointer}
+body[data-view="admin"] .vina-mobile-menu>button[data-page]{width:100%;min-height:57px;display:flex;align-items:center;gap:15px;text-align:left;border:0;border-top:1px solid #efe7df;background:transparent;font-size:14px;color:#3d2e24;cursor:pointer}
+body[data-view="admin"] .vina-mobile-menu>button[data-page]>span{width:26px;color:#a18771;font-size:22px;text-align:center}
+body[data-view="admin"] .vina-mobile-menu>button[data-page]>b{margin-left:auto;font-weight:400;color:#a18771}
+body[data-view="admin"] .vina-mobile-menu>button[aria-current="page"]{color:#8a6244;font-weight:700}
+body[data-view="admin"] main{padding-bottom:36px}
+}
+@media(min-width:741px){.vina-mobile-nav,.vina-mobile-menu{display:none!important}}
