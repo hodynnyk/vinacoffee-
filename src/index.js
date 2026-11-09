@@ -51,7 +51,25 @@ await env.DB.prepare('UPDATE sessions SET revoked_at=? WHERE employee_id=?').bin
 return reply({ok:true,message:'Пароль змінено. Увійдіть повторно.'},200,{'set-cookie':sessionCookie('',0)})
 }
 if(path==='/api/auth/logout'&&request.method==='POST'){await env.DB.prepare("UPDATE sessions SET revoked_at=? WHERE id_hash=?").bind(new Date().toISOString(),await sha(cookie(request))).run();return reply({ok:true},200,{'set-cookie':sessionCookie('',0)})}
-if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:false,bonuses:false,tasks:false,stockReports:false}});
+async function ensureShifts(){await env.DB.prepare("CREATE TABLE IF NOT EXISTS shifts (id TEXT PRIMARY KEY, employee_id TEXT NOT NULL REFERENCES employees(id), opened_at TEXT NOT NULL, closed_at TEXT, close_reason TEXT CHECK(close_reason IN ('manual','midnight','owner')), CHECK(closed_at IS NULL OR closed_at >= opened_at))").run();await env.DB.prepare('CREATE UNIQUE INDEX IF NOT EXISTS idx_one_open_shift ON shifts(employee_id) WHERE closed_at IS NULL').run()}
+if(path.startsWith('/api/shifts')&&['GET','POST'].includes(request.method)){
+await ensureShifts();
+const now=new Date().toISOString();
+if(path==='/api/shifts/mine'&&request.method==='GET'){const rows=await env.DB.prepare('SELECT id,opened_at,closed_at,close_reason FROM shifts WHERE employee_id=? ORDER BY opened_at DESC LIMIT 25').bind(user.id).all();return reply({shifts:rows.results})}
+if(path==='/api/shifts/open'&&request.method==='POST'){
+const id=crypto.randomUUID();
+const result=await env.DB.prepare("INSERT OR IGNORE INTO shifts(id,employee_id,opened_at) VALUES(?,?,?)").bind(id,user.id,now).run();
+if(result.meta.changes!==1)return reply({error:'У вас уже є відкрита зміна'},409);
+return reply({ok:true,id,opened_at:now},201)}
+if(path==='/api/shifts/close'&&request.method==='POST'){
+const result=await env.DB.prepare("UPDATE shifts SET closed_at=?,close_reason='manual' WHERE employee_id=? AND closed_at IS NULL").bind(now,user.id).run();
+if(result.meta.changes!==1)return reply({error:'Немає відкритої зміни'},409);
+return reply({ok:true,closed_at:now})}
+if(path==='/api/shifts'&&request.method==='GET'){
+if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
+const rows=await env.DB.prepare('SELECT shifts.id,employees.display_name,shifts.opened_at,shifts.closed_at,shifts.close_reason FROM shifts JOIN employees ON employees.id=shifts.employee_id ORDER BY shifts.opened_at DESC LIMIT 100').all();return reply({shifts:rows.results})}
+}
+if(path==='/api/staff/me'&&request.method==='GET')return reply({user:{name:user.display_name,role:user.role},modules:{shifts:true,bonuses:false,tasks:false,stockReports:false}});
 if(user.role!=='owner'&&user.role!=='manager')return reply({error:'Недостатньо прав'},403);
 if(path==='/api/staff'&&request.method==='GET'){const result=await env.DB.prepare('SELECT id,display_name,role,rank,active,created_at FROM employees ORDER BY created_at DESC LIMIT 100').all();return reply({staff:result.results})}
 if(path==='/api/audit'&&request.method==='GET'){await env.DB.prepare('CREATE TABLE IF NOT EXISTS audit_events (id TEXT PRIMARY KEY, actor_id TEXT, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT, details_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)').run();const result=await env.DB.prepare('SELECT action,entity_type,created_at FROM audit_events ORDER BY created_at DESC LIMIT 40').all();return reply({events:result.results})}
