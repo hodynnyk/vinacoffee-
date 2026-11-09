@@ -130,3 +130,11 @@ body[data-view="auth"] .sidebar .logo img{width:138px}
 .shift-active-person .overview-person-info{gap:5px}
 .shift-note{margin-top:12px;font-size:12px}
 @media(max-width:740px){.shift-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.shift-summary .card{padding:16px}.shift-summary .card:last-child{grid-column:1/-1}.shift-summary .metric{font-size:31px}#shift-active-list.card{padding:4px 15px}.shift-active-person{gap:10px}.shift-active-person .tag{font-size:10px;padding:6px 8px}}
+
+/* Brand lockup: use only the supplied VINA mark, never a text imitation */
+.sidebar .subtitle{display:none!important}
+.sidebar .logo{min-height:0;margin-bottom:28px}
+.sidebar .logo img{width:180px;height:auto;object-fit:contain}
+body[data-view="auth"] .sidebar .logo{width:204px;padding:10px 12px;border-radius:18px}
+body[data-view="auth"] .sidebar .logo img{width:180px}
+@media(max-width:740px){.sidebar .logo{margin-bottom:0}.sidebar .logo img{width:126px}body[data-view="auth"] .sidebar .logo{width:184px;padding:9px 12px}body[data-view="auth"] .sidebar .logo img{width:160px}}
