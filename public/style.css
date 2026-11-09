@@ -280,3 +280,16 @@ input:focus,select:focus{border-color:#9e785c;box-shadow:0 0 0 3px #a9826020}
 @keyframes vina-toast-in{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
 @media(max-width:740px){dialog[open]{animation-name:vina-dialog-mobile}@keyframes vina-dialog-mobile{from{opacity:0;transform:translate3d(0,24px,0)}to{opacity:1;transform:translate3d(0,0,0)}}}
 @media(prefers-reduced-motion:reduce){#content.vina-content-entering,dialog[open],dialog::backdrop,.vina-toast.is-visible{animation:none!important}.button,.ghost,nav button,input,select{transition:none!important}}
+
+/* VINA Motion 2 — honest loading placeholders */
+.vina-skeleton-list{display:grid;gap:0;width:100%;min-height:90px}
+.vina-skeleton-row{display:flex;align-items:center;gap:13px;padding:16px 0;border-bottom:1px solid #f0e9e1}
+.vina-skeleton-row:last-child{border-bottom:0}
+.vina-skeleton-avatar,.vina-skeleton-line,.vina-skeleton-metric{display:block;flex-shrink:0;background:linear-gradient(105deg,#f0e7de 15%,#faf5ef 42%,#f0e7de 70%);background-size:220% 100%;animation:vina-skeleton-shimmer 1.7s ease-in-out infinite}
+.vina-skeleton-avatar{width:39px;height:39px;border-radius:12px}
+.vina-skeleton-copy{display:grid;gap:9px;flex:1;min-width:0}
+.vina-skeleton-line{height:11px;border-radius:8px;width:65%;max-width:220px}
+.vina-skeleton-line.short{width:39%;height:9px}
+.vina-skeleton-metric{height:42px;width:64px;border-radius:9px;margin:2px 0}
+@keyframes vina-skeleton-shimmer{0%{background-position:120% 0}100%{background-position:-120% 0}}
+@media(prefers-reduced-motion:reduce){.vina-skeleton-avatar,.vina-skeleton-line,.vina-skeleton-metric{animation:none;background:#f0e7de}}
