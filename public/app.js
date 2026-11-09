@@ -89,7 +89,7 @@ $('#vina-theme-toggle')?.insertAdjacentElement('afterend',settingsButton);settin
 staffNavigate('home');
 $('#vina-supply-form').onsubmit=async event=>{event.preventDefault();const form=event.currentTarget;const button=form.querySelector('[type=submit]');const values=Object.fromEntries(new FormData(form));pending(button,true,'Надсилаємо…');try{await post('supply-requests',{itemId:values.itemId,stockState:values.stockState,note:values.note||''});form.reset();toast('Товар позначено як відсутній. Власника повідомлено')}catch(error){msg(error.message)}finally{pending(button,false)}};
 $('#refresh-my-shifts').onclick=async()=>{const button=$('#refresh-my-shifts');if(button.disabled)return;pending(button,true,'Оновлюємо…');try{await loadMyShifts()}finally{pending(button,false)}};
-await loadMyShifts();await loadStaffTasks();try{const catalog=await api('inventory/catalog');const list=$('#vina-supply-catalog');if(list)list.innerHTML='<option value="">Оберіть товар зі складу</option>'+catalog.items.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('')}catch(error){console.warn('Каталог товарів недоступний',error)}
+await loadMyShifts();await loadStaffTasks();await loadStaffOperations();try{const catalog=await api('inventory/catalog');const list=$('#vina-supply-catalog');if(list)list.innerHTML='<option value="">Оберіть товар зі складу</option>'+catalog.items.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('')}catch(error){console.warn('Каталог товарів недоступний',error)}
 }
 async function loadStaffOperations(){
  const tasks=$('#vina-staff-tasks');if(!tasks)return;
