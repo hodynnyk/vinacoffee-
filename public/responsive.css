@@ -275,3 +275,21 @@ body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:block!important;
 .vina-task-report #vina-task-completions{padding:16px;background:var(--vina-panel);border:1px solid var(--vina-border);border-radius:21px}
 .vina-task-done{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--vina-border);border-radius:999px;padding:8px 12px;color:var(--vina-ink);font-size:12px;font-weight:600}
 @media(max-width:740px){.vina-task-report #vina-task-completions{padding:12px}.vina-task-report>.row{flex-wrap:wrap}.vina-task-done{align-self:flex-start}}
+
+/* VINA Staff — compact editorial sections and consistent native controls */
+body[data-view="staff"] .vina-staff-app{gap:clamp(24px,5vw,36px)}
+body[data-view="staff"] .vina-staff-section-title{min-width:0;align-items:flex-start;gap:12px}
+body[data-view="staff"] .vina-staff-section-title h2{font-size:clamp(25px,6.7vw,36px);line-height:1.13;overflow-wrap:break-word;letter-spacing:-.035em}
+body[data-view="staff"] .vina-staff-history-panel{min-width:0;box-sizing:border-box}
+body[data-view="staff"] #vina-supply-form{display:grid;gap:14px;padding:20px;border-radius:22px;min-height:0}
+body[data-view="staff"] #vina-supply-form label{display:grid;gap:7px;min-width:0;font-size:13px;font-weight:600;color:var(--vina-ink,#e8d9cc)}
+body[data-view="staff"] #vina-supply-form input,body[data-view="staff"] #vina-supply-form textarea{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:13px 14px;border-radius:12px;border:1px solid var(--vina-border,#655347);background:var(--vina-panel,#332922);color:var(--vina-ink,#f1e7dc);font:inherit;font-size:16px;line-height:1.4;box-shadow:none;-webkit-appearance:none;appearance:none}
+body[data-view="staff"] #vina-supply-form input::placeholder,body[data-view="staff"] #vina-supply-form textarea::placeholder{color:var(--vina-muted,#9f8b7c);opacity:.8}
+body[data-view="staff"] #vina-supply-form textarea{resize:vertical;min-height:85px}
+body[data-view="staff"] #vina-supply-form .button{width:100%;min-height:48px;margin:0;border-radius:14px}
+body[data-view="admin"] .vina-inventory{display:grid;gap:20px}
+body[data-view="admin"] .vina-inventory-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:20px 0}
+body[data-view="admin"] .vina-inventory-form label{display:grid;gap:6px;font-size:13px}
+body[data-view="admin"] .vina-inventory-form input:not([type="checkbox"]){min-width:0;width:100%;box-sizing:border-box}
+body[data-view="admin"] .vina-inventory-form .button{align-self:end}
+@media(max-width:740px){body[data-view="staff"] .vina-staff-app{gap:27px}body[data-view="staff"] .vina-staff-section-title h2{font-size:clamp(25px,7vw,33px)}body[data-view="staff"] #vina-supply-form{padding:16px}body[data-view="admin"] .vina-inventory-form{grid-template-columns:minmax(0,1fr)}}
