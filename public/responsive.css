@@ -509,3 +509,28 @@ body[data-view="staff"] #vina-mobile-menu[hidden]{display:none!important}
  body[data-view="staff"] .vina-staff-owner-home .vina-dc-intro h2{font-size:30px!important}
  body[data-view="staff"] .vina-staff-owner-home .vina-dc-masthead{margin-bottom:14px}
 }
+
+/* Restore the original VINA welcome composition; preserve Data Centre navigation. */
+body[data-view="staff"] .vina-staff-owner-home>.vina-staff-hero{display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:430px!important;padding:34px 38px!important;border-radius:34px!important;background:#241c18!important;color:#f6e9db!important;position:relative;overflow:hidden}
+body[data-view="staff"] .vina-staff-owner-home>.vina-staff-hero:before{content:"";position:absolute;pointer-events:none;inset:-35% -32% -45% 23%;border:1px solid #c7a78b30;border-radius:50%;box-shadow:0 0 0 105px #8d6b5310,0 0 0 210px #8d6b530a}
+body[data-view="staff"] .vina-staff-owner-home>.vina-staff-hero>*{position:relative;z-index:1}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:42px!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body{display:flex!important;align-items:center;justify-content:space-between;min-height:0!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body h2{font:400 clamp(54px,7vw,96px)/.98 Georgia,serif!important;letter-spacing:-.055em!important;margin:24px 0 25px!important;color:#f6e9db!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body h2 br{display:block!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body h2 em{display:block!important;color:#e6c9aa!important;font-style:italic}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body h2 em:before{content:none!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body p{font-size:clamp(15px,2vw,19px)!important;color:#cdb9aa!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-footer{display:flex!important;justify-content:space-between;border-top:1px solid #b89a7b36;padding-top:18px;margin-top:45px;letter-spacing:.14em;font-size:10px;color:#cbb29c}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-seal{display:none!important}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-top .vina-staff-wordmark{font-size:21px;letter-spacing:.22em}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-top .vina-staff-edition{font-size:10px;letter-spacing:.15em;color:#cbb29c}
+body[data-view="staff"] .vina-staff-owner-home .vina-staff-overline{font-size:11px;letter-spacing:.23em;color:#cbb29c}
+body[data-view="staff"] .vina-staff-owner-home>.vina-dc-divider{margin-top:27px}
+@media(max-width:740px){
+ body[data-view="staff"] .vina-staff-owner-home>.vina-staff-hero{min-height:390px!important;padding:27px 25px!important;border-radius:27px!important}
+ body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-top{margin-bottom:35px!important}
+ body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body h2{font-size:clamp(49px,12vw,72px)!important;margin:22px 0!important}
+ body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-body p{font-size:15px!important}
+ body[data-view="staff"] .vina-staff-owner-home .vina-staff-hero-footer{margin-top:35px}
+}
