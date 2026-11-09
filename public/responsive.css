@@ -267,3 +267,11 @@ body[data-view="admin"] #vina-mobile-menu:not([hidden]){display:block!important;
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 @media(max-width:740px){.vina-tasks-admin .toolbar{display:grid;gap:14px}.vina-new-task{display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%}.vina-new-task input{min-width:0;width:100%}.vina-tasks-admin #vina-admin-task-list{padding:12px}}
 @media(max-width:380px){.vina-new-task{grid-template-columns:minmax(0,1fr)}.vina-new-task button{width:100%}}
+
+/* Owner completion reporting */
+.vina-task-report{margin-top:30px}
+.vina-task-report>.row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+.vina-task-report .section-title{margin-bottom:5px}
+.vina-task-report #vina-task-completions{padding:16px;background:var(--vina-panel);border:1px solid var(--vina-border);border-radius:21px}
+.vina-task-done{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--vina-border);border-radius:999px;padding:8px 12px;color:var(--vina-ink);font-size:12px;font-weight:600}
+@media(max-width:740px){.vina-task-report #vina-task-completions{padding:12px}.vina-task-report>.row{flex-wrap:wrap}.vina-task-done{align-self:flex-start}}
