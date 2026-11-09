@@ -119,3 +119,14 @@ body[data-view="auth"] .sidebar .logo img{width:138px}
 .overview-actions{display:flex;gap:12px;flex-wrap:wrap}
 @media(max-width:1000px){.overview-columns{grid-template-columns:1fr}}
 @media(max-width:740px){.overview-hero{padding:24px;align-items:stretch;flex-direction:column}.overview-hero .button{align-self:flex-start}.overview-columns .row .ghost{font-size:12px;padding:8px 12px}.overview-columns .card{padding:6px 15px}.overview-person{gap:9px}.overview-avatar{width:35px;height:35px}.overview-actions .ghost{flex:1}}
+
+/* Shift management */
+.shift-summary{margin-bottom:18px}
+.shift-summary .card{padding:22px}
+.shift-summary .metric{margin:9px 0 0}
+#shift-active-list.card{padding:8px 20px}
+.shift-active-person{display:flex;gap:14px;align-items:center;padding:17px 0;border-bottom:1px solid #eee4da}
+.shift-active-person:last-child{border-bottom:0}
+.shift-active-person .overview-person-info{gap:5px}
+.shift-note{margin-top:12px;font-size:12px}
+@media(max-width:740px){.shift-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.shift-summary .card{padding:16px}.shift-summary .card:last-child{grid-column:1/-1}.shift-summary .metric{font-size:31px}#shift-active-list.card{padding:4px 15px}.shift-active-person{gap:10px}.shift-active-person .tag{font-size:10px;padding:6px 8px}}
